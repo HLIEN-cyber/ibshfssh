@@ -801,6 +801,8 @@ footer{
   footer{grid-template-columns:1fr;padding:3rem 2rem}
   .f-bottom{padding:1rem 2rem}
   .stack-stage{min-height:430px}
+  .curator-grid{grid-template-columns:1fr!important}
+  #contact{padding:4rem 2rem!important}
   .stack-container{width:280px;height:390px}
   .stack-card[data-pos="1"]{transform:translateX(-165px) translateY(8px) rotate(-7deg) scale(.78)}
   .stack-card[data-pos="2"]{transform:translateX(165px) translateY(8px) rotate(7deg) scale(.78)}
@@ -817,13 +819,16 @@ footer{
 <nav>
   <div class="nav-logo">跨校遠距教學課程計畫 <em>&mdash; 聯合展</em></div>
   <ul class="nav-links">
+    <li><a href="#hero">回到主頁</a></li>
+    <li><a href="#film-section">海報展區</a></li>
     <li><a href="#about">展覽理念</a></li>
-    <li><a href="#groups" class="nav-pill">立即探索</a></li>
+    <li><a href="#groups">立即探索</a></li>
+    <li><a href="#contact" class="nav-pill">聯絡我們</a></li>
   </ul>
 </nav>
 
 <!-- HERO -->
-<section class="hero">
+<section class="hero" id="hero">
   <div class="hero-bg"></div>
   <div class="hero-left">
     <div class="hero-kicker">
@@ -962,6 +967,63 @@ footer{
   </div>
 
   <div id="groupRows"></div>
+</section>
+
+<!-- CURATORS / CONTACT -->
+<section id="contact" style="
+  position:relative;z-index:1;
+  background:#1A1F18;
+  border-top:1px solid rgba(249,115,22,0.2);
+  padding:6rem 5rem;
+  overflow:hidden;
+">
+  <div style="
+    position:absolute;bottom:-2rem;right:-1rem;
+    font-family:var(--serif);font-size:220px;font-weight:300;font-style:italic;
+    color:rgba(255,255,255,0.025);line-height:1;pointer-events:none;user-select:none;
+  ">策</div>
+
+  <div style="position:relative;z-index:1;max-width:860px;margin:0 auto;">
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:2.5rem;">
+      <div style="width:22px;height:1px;background:var(--orange)"></div>
+      <div style="font-family:var(--mono);font-size:11px;letter-spacing:.25em;text-transform:uppercase;color:var(--orange);">Curators · 策展人</div>
+    </div>
+
+    <h2 style="
+      font-family:var(--serif);font-size:clamp(26px,3vw,42px);
+      font-weight:300;color:#F0EFED;margin-bottom:3rem;line-height:1.18;
+    ">
+      讓數學的語言<br><em style="font-style:italic;color:var(--orange);">跨越教室，走向世界</em>
+    </h2>
+
+    <div class="curator-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-bottom:3rem;">
+      <div style="
+        border:1px solid rgba(249,115,22,0.22);border-radius:12px;padding:2rem 2.2rem;
+        background:rgba(255,255,255,0.035);
+      ">
+        <div style="font-family:var(--mono);font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:var(--orange);margin-bottom:1rem;">竹科實中</div>
+        <div style="font-family:var(--serif);font-size:30px;font-weight:400;color:#F0EFED;margin-bottom:.4rem;letter-spacing:.03em;">慧蓮老師</div>
+        <div style="font-family:var(--mono);font-size:10px;letter-spacing:.15em;text-transform:uppercase;color:rgba(240,239,237,0.28);">課程設計 · 策展</div>
+      </div>
+      <div style="
+        border:1px solid rgba(249,115,22,0.22);border-radius:12px;padding:2rem 2.2rem;
+        background:rgba(255,255,255,0.035);
+      ">
+        <div style="font-family:var(--mono);font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:var(--orange);margin-bottom:1rem;">鳳山高中</div>
+        <div style="font-family:var(--serif);font-size:30px;font-weight:400;color:#F0EFED;margin-bottom:.4rem;letter-spacing:.03em;">佳蓉老師</div>
+        <div style="font-family:var(--mono);font-size:10px;letter-spacing:.15em;text-transform:uppercase;color:rgba(240,239,237,0.28);">課程設計 · 策展</div>
+      </div>
+    </div>
+
+    <div style="border-top:1px solid rgba(240,239,237,0.08);padding-top:2rem;">
+      <p style="
+        font-family:var(--sans);font-size:15px;
+        color:rgba(240,239,237,0.32);line-height:1.9;font-weight:300;
+      ">
+        本展覽由竹科實中與鳳山高中雙語數學跨校遠距教學計畫共同策劃，<br>感謝所有投入的同學與師長，讓這些作品得以呈現。
+      </p>
+    </div>
+  </div>
 </section>
 
 
