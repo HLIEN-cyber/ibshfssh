@@ -1,0 +1,1571 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>跨校遠距雙語數學網路互動應用 — 2026 聯合展</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&family=Noto+Serif+TC:wght@200;300;400&family=Noto+Sans+TC:wght@300;400;500&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+
+:root{
+  /* ── Sage green gradient palette ── */
+  --bg:       #EDF0EC;   /* base: very light sage green */
+  --bg2:      #E2E8E0;   /* hero-right panel */
+  --bg3:      #D5DDD2;   /* marquee / divider */
+  --surface:  #F4F6F3;   /* white-ish card */
+  --ink:      #1A1F18;   /* near-black with green undertone */
+  --ink2:     #2E3528;
+  --ink3:     #637060;   /* secondary text */
+  --ink4:     #96A292;   /* muted */
+  --rule:     rgba(26,31,24,0.09);
+  --rule2:    rgba(26,31,24,0.05);
+  --orange:   #F97316;   /* accent — keep orange */
+  --orange2:  #FBC397;
+  --orange3:  #FEF0E7;
+  --serif:    'Cormorant Garamond','Noto Serif TC',Georgia,serif;
+  --sans:     'Noto Sans TC',sans-serif;
+  --mono:     'DM Mono',monospace;
+}
+
+html{scroll-behavior:smooth}
+
+body{
+  background: linear-gradient(
+    135deg,
+    #A8C4A2 0%,
+    #B8CCBA 18%,
+    #C9D4BE 35%,
+    #D8D5C8 52%,
+    #C8CEBC 68%,
+    #AEBFAA 85%,
+    #9FB89A 100%
+  );
+  background-attachment: fixed;
+  color:var(--ink);
+  font-family:var(--serif);
+  font-weight:300;
+  overflow-x:hidden;
+}
+
+/* ── GLOBAL LINK ANIMATION ──────────────────────────────────
+   Uses a pseudo-element underline that sweeps left→right on hover,
+   and a background-clip text colour reveal for text links.
+   Apply class .link-anim to any <a> you want this effect on.
+────────────────────────────────────────────────────────────── */
+
+/* Base: link-anim wrapper */
+.link-anim{
+  position:relative;
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  text-decoration:none;
+  color:var(--ink);
+  /* gradient clip for text colour sweep */
+  background: linear-gradient(
+    90deg,
+    var(--orange) 0%,
+    var(--orange) 50%,
+    var(--ink)    50%,
+    var(--ink)    100%
+  );
+  background-size: 200% 100%;
+  background-position: 100% 0;   /* starts at ink colour */
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  transition: background-position 0.45s cubic-bezier(0.77,0,0.175,1);
+}
+.link-anim:hover{
+  background-position: 0% 0;    /* sweeps to orange */
+}
+
+/* Underline sweep */
+.link-anim::after{
+  content:'';
+  position:absolute;
+  left:0; bottom:-2px;
+  width:100%; height:1px;
+  background: var(--orange);
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform 0.4s cubic-bezier(0.77,0,0.175,1);
+}
+.link-anim:hover::after{
+  transform: scaleX(1);
+}
+
+/* Arrow child inside link-anim */
+.link-anim .arr{
+  display:inline-block;
+  transition:transform 0.35s cubic-bezier(0.34,1.56,0.64,1);
+  -webkit-text-fill-color: initial; /* arrows stay solid */
+  background:none;
+  -webkit-background-clip: initial;
+  background-clip: initial;
+  color: var(--orange);
+}
+.link-anim:hover .arr{
+  transform: translateX(6px);
+}
+
+/* ── NAV link-anim variant (no text-fill trick — too small) ── */
+.nav-link-anim{
+  position:relative;
+  text-decoration:none;
+  color:var(--ink3);
+  transition: color .3s;
+}
+.nav-link-anim::after{
+  content:'';
+  position:absolute;
+  left:0; bottom:-3px;
+  width:100%; height:1px;
+  background:var(--orange);
+  transform:scaleX(0);
+  transform-origin:left center;
+  transition:transform .35s cubic-bezier(.77,0,.175,1);
+}
+.nav-link-anim:hover{ color:var(--ink); }
+.nav-link-anim:hover::after{ transform:scaleX(1); }
+
+/* ── Row hover animated arrow ── */
+.row-arrow{
+  display:inline-block;
+  font-style:normal;
+  opacity:0;
+  transform:translateX(-6px);
+  transition:opacity .3s, transform .35s cubic-bezier(.34,1.56,.64,1);
+  color:var(--orange);
+  font-family:var(--mono);
+  font-size:14px;
+}
+.group-row:hover .row-arrow{
+  opacity:1;
+  transform:translateX(0);
+}
+
+/* subtle paper grain */
+body::before{
+  content:'';position:fixed;inset:0;pointer-events:none;z-index:999;
+  opacity:0.018;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size:180px 180px;
+}
+
+/* ── NAV ── */
+nav{
+  position:fixed;top:0;left:0;right:0;z-index:200;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 4rem;height:58px;
+  background:rgba(28,48,32,0.97);
+  backdrop-filter:blur(16px);
+  border-bottom:1px solid rgba(249,115,22,0.3);
+}
+.nav-logo{
+  font-family:var(--serif);
+  font-size:20px;font-weight:400;letter-spacing:0.05em;
+  color:#F0EFED;
+}
+.nav-logo em{font-style:italic;color:var(--orange)}
+.nav-links{display:flex;gap:2.5rem;list-style:none;align-items:center}
+.nav-links a{
+  font-family:var(--mono);font-size:11px;font-weight:400;
+  letter-spacing:0.2em;text-transform:uppercase;
+  color:rgba(240,239,237,0.55);text-decoration:none;
+  position:relative;
+  transition: color .3s;
+}
+.nav-links a:not(.nav-pill)::after{
+  content:'';
+  position:absolute;
+  left:0; bottom:-3px;
+  width:100%; height:1px;
+  background:var(--orange);
+  transform:scaleX(0);
+  transform-origin:left center;
+  transition:transform .35s cubic-bezier(.77,0,.175,1);
+}
+.nav-links a:not(.nav-pill):hover{ color:#F0EFED; }
+.nav-links a:not(.nav-pill):hover::after{ transform:scaleX(1); }
+.nav-pill{
+  padding:6px 16px;border-radius:100px;
+  border:1px solid var(--orange);
+  color:var(--orange)!important;
+  transition:background .25s,color .25s!important;
+}
+.nav-pill:hover{background:var(--orange);color:#111!important}
+
+/* ── HERO — full-width stage bg ── */
+.hero{
+  min-height:100vh;
+  padding-top:58px;
+  position:relative;
+  overflow:hidden;
+  z-index:1;
+  display:flex;
+  align-items:center;
+}
+
+/* stage background image */
+.hero-bg{
+  position:absolute;inset:0;
+  background:url('stage-bg.png') center center / cover no-repeat;
+  z-index:0;
+}
+
+/* dark gradient overlay so text is readable */
+.hero-bg::after{
+  content:'';
+  position:absolute;inset:0;
+  background:linear-gradient(
+    100deg,
+    rgba(8,10,6,0.88) 0%,
+    rgba(8,10,6,0.72) 40%,
+    rgba(8,10,6,0.45) 65%,
+    rgba(8,10,6,0.15) 100%
+  );
+}
+
+/* ── HERO LEFT — text over image ── */
+.hero-left{
+  position:relative;z-index:2;
+  display:flex;flex-direction:column;justify-content:center;
+  padding:7rem 8rem 7rem 7rem;
+  max-width:1000px;
+  width:100%;
+}
+.hero-kicker{
+  display:flex;align-items:center;gap:12px;margin-bottom:2rem;
+}
+.kicker-line{width:28px;height:1px;background:var(--orange)}
+.kicker-text{
+  font-family:var(--mono);font-size:12px;font-weight:400;
+  letter-spacing:0.28em;text-transform:uppercase;color:var(--orange);
+}
+
+.hero-title{
+  font-family:'Cormorant Garamond', 'Noto Serif TC', Georgia, serif;
+  font-size:clamp(28px,3.8vw,58px);
+  font-weight:400;line-height:1.2;letter-spacing:.02em;
+  margin-bottom:2.5rem;
+  font-style:normal;
+  color:#F5F0E8;
+  text-shadow:0 2px 32px rgba(0,0,0,0.6);
+  white-space:nowrap;
+}
+.t-italic{font-style:italic;color:var(--orange);display:block}
+.t-outline{
+  display:block;
+  -webkit-text-stroke:.5px rgba(240,238,232,0.4);
+  color:transparent;
+}
+
+.hero-sub{
+  font-family:var(--sans);font-size:15px;line-height:1.7;
+  color:rgba(245,240,232,0.68);
+  font-weight:300;max-width:700px;margin-bottom:2.5rem;
+}
+
+.hero-actions{display:flex;gap:.8rem;align-items:center}
+.btn-fill{
+  display:inline-flex;align-items:center;gap:9px;
+  background:var(--orange);color:#111;
+  font-family:var(--mono);font-size:11px;font-weight:400;
+  letter-spacing:0.18em;text-transform:uppercase;
+  padding:14px 28px;border-radius:100px;
+  border:none;cursor:pointer;text-decoration:none;
+  transition:background .25s,transform .2s;
+}
+.btn-fill:hover{background:#fff;transform:translateY(-2px);}
+.btn-outline{
+  display:inline-flex;align-items:center;gap:8px;
+  background:transparent;color:rgba(245,240,232,0.85);
+  font-family:var(--mono);font-size:11px;font-weight:400;
+  letter-spacing:0.18em;text-transform:uppercase;
+  padding:14px 28px;border-radius:100px;
+  border:1px solid rgba(245,240,232,0.35);cursor:pointer;text-decoration:none;
+  transition:border-color .25s,color .25s;
+}
+.btn-outline:hover{border-color:var(--orange);color:var(--orange)}
+
+.hero-foot{
+  display:flex;gap:3rem;
+  margin-top:3.5rem;padding-top:2.5rem;
+  border-top:1px solid rgba(245,240,232,0.15);
+}
+.hf-num{
+  font-family:var(--serif);font-size:52px;font-weight:300;
+  letter-spacing:-.02em;line-height:1;color:#F5F0E8;
+}
+.hf-num sup{font-size:.38em;color:var(--orange);vertical-align:super}
+.hf-label{
+  font-family:var(--mono);font-size:11px;font-weight:400;
+  letter-spacing:0.2em;text-transform:uppercase;
+  color:rgba(245,240,232,0.45);margin-top:5px;
+}
+
+/* ── HERO RIGHT — FILM → STACK ── */
+.hero-right{
+  background:rgba(120,150,115,0.35);border-left:1px solid var(--rule);
+  position:relative;display:flex;align-items:center;justify-content:center;
+  padding:0;overflow:hidden;
+  min-height:100vh;
+}
+.hero-right::before{
+  content:'展';position:absolute;bottom:-2rem;right:-1rem;
+  font-family:var(--serif);font-size:220px;font-weight:300;font-style:italic;
+  color:rgba(17,17,16,0.04);line-height:1;pointer-events:none;user-select:none;
+}
+
+.ring-stack-wrap{
+  position:relative;
+  width:100%;height:100%;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+}
+
+/* ── PHASE 1: FILM STRIP ── */
+.ring-stage{
+  position:absolute;
+  inset:0;
+  overflow:hidden;
+  display:flex;align-items:center;
+}
+.ring-stage::before,.ring-stage::after{
+  content:'';
+  position:absolute;top:0;bottom:0;width:60px;z-index:20;pointer-events:none;
+}
+.ring-stage::before{left:0;background:linear-gradient(to right,var(--bg2),transparent);}
+.ring-stage::after{right:0;background:linear-gradient(to left,var(--bg2),transparent);}
+
+/* the scrolling film strip */
+.film-strip-scroll{
+  position:absolute;
+  left:0;top:50%;
+  transform:translateY(-50%);
+  display:flex;flex-direction:column;
+  background:#111;
+  border-top:3px solid #000;
+  border-bottom:3px solid #000;
+  will-change:left;
+  /* strip is 340px tall — big enough to feel cinematic */
+  height:340px;
+}
+
+/* sprocket band */
+.spr-band{
+  height:36px;
+  background:#1a1a1a;
+  display:flex;align-items:center;
+  padding:0 6px;gap:4px;
+  position:relative;flex-shrink:0;
+}
+.spr-band.top{border-bottom:2px solid #000;}
+.spr-band.bot{border-top:2px solid #000;}
+.spr-hole{
+  width:18px;height:13px;
+  background:#000;border-radius:3px;
+  border:1px solid #333;flex-shrink:0;
+  box-shadow:inset 0 0 4px rgba(0,0,0,.9);
+}
+.spr-edge-num{
+  position:absolute;right:4px;top:50%;transform:translateY(-50%);
+  font-family:var(--mono);font-size:7px;letter-spacing:.08em;
+  color:rgba(255,210,60,.5);white-space:nowrap;pointer-events:none;
+}
+
+/* frames row */
+.film-frames-row{
+  display:flex;align-items:stretch;
+  flex:1;padding:0 6px;gap:4px;
+  background:#111;
+}
+
+/* single frame — wider & taller */
+.film-fr{
+  width:170px;flex-shrink:0;
+  position:relative;
+  background:#0a0a0a;
+  border-left:2px solid #2c2c2c;
+  border-right:2px solid #2c2c2c;
+}
+.film-fr-inner{
+  width:100%;height:100%;
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  gap:8px;overflow:hidden;
+  position:relative;
+}
+.film-fr-inner img{
+  position:absolute;inset:0;width:100%;height:100%;
+  object-fit:cover;opacity:.85;filter:sepia(.15) contrast(1.1);
+}
+.fr-num{
+  font-family:var(--serif);font-size:38px;font-style:italic;font-weight:300;
+  color:rgba(255,210,80,.18);line-height:1;position:relative;z-index:1;
+}
+.fr-sep{width:24px;height:1px;background:rgba(249,115,22,.45);position:relative;z-index:1;}
+.fr-name{
+  font-family:var(--serif);font-size:12px;font-weight:400;
+  color:rgba(255,255,255,.55);text-align:center;
+  line-height:1.5;padding:0 8px;position:relative;z-index:1;
+}
+.fr-dx{
+  position:absolute;bottom:0;left:0;right:0;height:7px;
+  background:repeating-linear-gradient(90deg,#444 0,#444 5px,#111 5px,#111 10px);
+  z-index:2;
+}
+
+/* ── PHASE 2: STACK ── */
+.stack-wrap{
+  position:relative;
+  display:none;
+  padding:3rem;
+}
+.stack-wrap.visible{
+  display:flex;flex-direction:column;align-items:center;
+  position:relative;z-index:10;
+}
+
+.stack-label{
+  font-family:var(--mono);font-size:11px;font-weight:400;
+  letter-spacing:0.22em;text-transform:uppercase;color:var(--ink4);
+  margin-bottom:1.4rem;
+  display:flex;justify-content:space-between;align-items:center;
+}
+.stack-label span{color:var(--orange)}
+
+.stack-container{
+  position:relative;width:320px;height:440px;perspective:1200px;
+}
+.stack-card{
+  position:absolute;width:100%;height:100%;
+  border-radius:6px;overflow:hidden;cursor:pointer;
+  transition:transform .7s cubic-bezier(.22,1,.36,1),
+             opacity .6s ease,box-shadow .5s ease;
+  will-change:transform;transform-origin:bottom center;
+}
+.stack-card[data-pos="0"]{
+  transform:translateY(0) rotate(0deg) scale(1);z-index:10;
+  box-shadow:0 24px 56px rgba(17,17,16,0.14),0 2px 8px rgba(17,17,16,0.08);
+}
+.stack-card[data-pos="1"]{
+  transform:translateY(13px) rotate(2.2deg) scale(.965);z-index:9;
+  box-shadow:0 12px 28px rgba(17,17,16,0.10);
+}
+.stack-card[data-pos="2"]{
+  transform:translateY(24px) rotate(-2.8deg) scale(.932);z-index:8;
+  box-shadow:0 6px 16px rgba(17,17,16,0.08);
+}
+.stack-card[data-pos="3"]{
+  transform:translateY(33px) rotate(1.8deg) scale(.9);z-index:7;opacity:.55;
+}
+.stack-card[data-pos="4"]{
+  transform:translateY(40px) rotate(-1.2deg) scale(.87);z-index:6;opacity:.25;
+}
+.stack-card[data-pos="hidden"]{
+  transform:translateY(-60px) scale(.82) rotate(-3deg);
+  opacity:0;z-index:0;pointer-events:none;
+}
+.stack-card[data-pos="0"]:hover{
+  transform:translateY(-5px) scale(1.01);
+  box-shadow:0 36px 72px rgba(17,17,16,0.18);
+}
+
+.card-face{
+  width:100%;height:100%;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  position:relative;
+}
+.card-bar{
+  position:absolute;bottom:0;left:0;right:0;
+  padding:.9rem 1.1rem .8rem;
+  background:rgba(17,17,16,0.78);
+  backdrop-filter:blur(6px);
+  display:flex;align-items:flex-end;justify-content:space-between;
+}
+.card-name{
+  font-family:var(--serif);font-size:18px;font-weight:400;color:#FAFAF8;line-height:1.1;
+}
+.card-name em{
+  display:block;font-family:var(--mono);font-style:normal;
+  font-size:9px;letter-spacing:0.18em;text-transform:uppercase;
+  color:rgba(250,250,248,0.4);margin-bottom:3px;
+}
+.card-num-big{
+  font-family:var(--serif);font-size:32px;font-weight:300;font-style:italic;
+  color:rgba(250,250,248,0.22);line-height:1;
+}
+
+.stack-nav{
+  margin-top:1.8rem;display:flex;align-items:center;justify-content:center;gap:1rem;
+}
+.snav-btn{
+  width:34px;height:34px;border-radius:50%;
+  border:1px solid var(--rule);background:rgba(244,246,243,0.8);
+  color:var(--ink3);display:flex;align-items:center;justify-content:center;
+  cursor:pointer;transition:all .25s;
+}
+.snav-btn:hover{border-color:var(--orange);color:var(--orange)}
+.snav-btn svg{width:13px;height:13px}
+.snav-hint{
+  font-family:var(--mono);font-size:11px;letter-spacing:0.18em;
+  text-transform:uppercase;color:var(--ink4);
+}
+
+/* ── MARQUEE ── */
+.marquee-wrap{
+  overflow:hidden;
+  border-top:1px solid var(--rule);border-bottom:1px solid var(--rule);
+  background:rgba(175,200,172,0.5);padding:11px 0;
+  position:relative;z-index:1;
+}
+.marquee-track{display:flex;white-space:nowrap;animation:mq 30s linear infinite}
+.mq-item{
+  display:inline-flex;align-items:center;gap:1rem;padding:0 2rem;
+  font-family:var(--mono);font-size:11px;letter-spacing:0.18em;text-transform:uppercase;
+  color:var(--ink4);
+}
+.mq-sep{color:var(--orange)}
+@keyframes mq{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+
+/* ── ABOUT ── */
+.about{display:grid;grid-template-columns:1fr;border-top:1px solid var(--rule);position:relative;z-index:1;}
+.about-text{padding:6rem 5rem;border-right:1px solid var(--rule)}
+.section-kicker{display:flex;align-items:center;gap:10px;margin-bottom:2.5rem}
+.kl{width:22px;height:1px;background:var(--orange)}
+.kt{
+  font-family:var(--mono);font-size:11px;letter-spacing:0.25em;
+  text-transform:uppercase;color:var(--orange);
+}
+.about-heading{
+  font-size:clamp(30px,3.6vw,50px);font-weight:300;line-height:1.12;margin-bottom:2rem;
+}
+.about-heading em{font-style:italic;color:var(--orange)}
+.about-body{
+  font-family:var(--sans);font-size:16px;line-height:1.9;
+  color:var(--ink3);font-weight:300;margin-bottom:1.4rem;
+}
+.about-cta{
+  display:inline-flex;align-items:center;gap:9px;
+  font-family:var(--mono);font-size:11px;letter-spacing:0.2em;text-transform:uppercase;
+  margin-top:.8rem;
+  position:relative;
+  text-decoration:none;
+  color:var(--ink);
+  background: linear-gradient(90deg, var(--orange) 0%, var(--orange) 50%, var(--ink) 50%, var(--ink) 100%);
+  background-size: 200% 100%;
+  background-position: 100% 0;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  transition: background-position 0.45s cubic-bezier(0.77,0,0.175,1);
+}
+.about-cta::after{
+  content:'';position:absolute;left:0;bottom:-2px;
+  width:100%;height:1px;background:var(--orange);
+  transform:scaleX(0);transform-origin:left center;
+  transition:transform .4s cubic-bezier(.77,0,.175,1);
+}
+.about-cta:hover{ background-position:0% 0; }
+.about-cta:hover::after{ transform:scaleX(1); }
+.about-cta .arr{
+  display:inline-block;
+  -webkit-text-fill-color:initial;background:none;
+  -webkit-background-clip:initial;background-clip:initial;
+  color:var(--orange);
+  transition:transform .35s cubic-bezier(.34,1.56,.64,1);
+}
+.about-cta:hover .arr{ transform:translateX(6px); }
+
+.about-pull{
+  padding:6rem 5rem;background:rgba(205,225,202,0.55);
+  display:flex;flex-direction:column;justify-content:center;position:relative;overflow:hidden;
+}
+.pull-quote{
+  font-size:clamp(30px,3.5vw,52px);font-weight:300;font-style:italic;
+  line-height:1.15;color:var(--ink);margin-bottom:2rem;position:relative;z-index:1;
+}
+.pull-quote::before{
+  content:'\201C';font-size:180px;font-weight:300;
+  color:rgba(17,17,16,0.04);position:absolute;top:-30px;left:-15px;
+  line-height:1;z-index:0;pointer-events:none;
+}
+.pull-attr{
+  font-family:var(--mono);font-size:11px;letter-spacing:0.2em;
+  text-transform:uppercase;color:var(--orange);
+}
+.pull-stats{
+  display:flex;gap:2.5rem;margin-top:3rem;padding-top:2.5rem;
+  border-top:1px solid var(--rule);
+}
+.ps-num{
+  font-family:var(--serif);font-size:46px;font-weight:300;line-height:1;color:var(--ink);
+}
+.ps-label{
+  font-family:var(--mono);font-size:11px;letter-spacing:0.18em;
+  text-transform:uppercase;color:var(--ink4);margin-top:4px;
+}
+
+/* ── GROUP LIST ── */
+.list-section{border-top:1px solid var(--rule);padding:5rem}
+.list-header{
+  display:flex;align-items:baseline;justify-content:space-between;
+  margin-bottom:3rem;padding-bottom:1.5rem;border-bottom:1px solid var(--rule);
+}
+.list-title{font-family:var(--serif);font-size:clamp(22px,2.8vw,38px);font-weight:300}
+.list-count{
+  font-family:var(--mono);font-size:9px;letter-spacing:0.2em;
+  text-transform:uppercase;color:var(--orange);
+}
+
+/* ── EXHIBIT COLUMN HEADERS ── */
+.exhibit-col-heads{
+  display:grid;grid-template-columns:200px 1fr 1fr;gap:1rem;
+  padding:.6rem 0 .8rem;border-bottom:1px solid var(--rule);
+}
+.ech-spacer{}
+.ech-label{
+  display:flex;align-items:center;gap:6px;
+  font-family:var(--mono);font-size:11px;font-weight:400;
+  letter-spacing:0.18em;text-transform:uppercase;color:var(--orange);
+}
+
+.list-section{border-top:1px solid var(--rule);padding:5rem;position:relative;z-index:1;}
+.list-header{
+  display:flex;align-items:baseline;justify-content:space-between;
+  margin-bottom:1.5rem;padding-bottom:1.5rem;border-bottom:1px solid var(--rule);
+}
+.list-title{font-family:var(--serif);font-size:clamp(28px,3.2vw,46px);font-weight:300}
+.list-count{
+  font-family:var(--mono);font-size:11px;letter-spacing:0.18em;
+  text-transform:uppercase;color:var(--orange);
+}
+
+/* 3-col row: [#＋name] [poster] [app] */
+.group-row{
+  display:grid;grid-template-columns:200px 1fr 1fr;
+  align-items:center;gap:1rem;
+  padding:1.3rem 0;
+  border-bottom:1px solid var(--rule2);
+  cursor:pointer;position:relative;overflow:visible;transition:background .2s;
+}
+.group-row:first-child{border-top:1px solid var(--rule2)}
+.group-row::after{
+  content:'';position:absolute;bottom:0;left:0;
+  width:0;height:1px;background:var(--orange);
+  transition:width .45s cubic-bezier(.77,0,.175,1);
+}
+.group-row:hover::after{width:100%}
+.group-row:hover{background:rgba(195,218,192,0.5)}
+
+/* left col */
+.row-left{display:flex;align-items:center;gap:14px}
+.rn{
+  font-family:var(--serif);font-size:22px;font-style:italic;font-weight:300;
+  color:var(--bg3);letter-spacing:.02em;transition:color .25s;flex-shrink:0;
+}
+.group-row:hover .rn{color:var(--orange)}
+.ri-name{font-family:var(--serif);font-size:20px;font-weight:400;letter-spacing:.01em;margin-bottom:3px}
+.ri-en{font-family:var(--mono);font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:var(--ink4)}
+
+/* poster cell */
+.exhibit-poster{display:flex;align-items:center;gap:12px}
+.ex-thumb{
+  width:46px;height:62px;border-radius:3px;overflow:hidden;flex-shrink:0;
+  box-shadow:0 3px 10px rgba(26,31,24,0.15);transition:box-shadow .25s;
+}
+.group-row:hover .ex-thumb{box-shadow:0 6px 18px rgba(26,31,24,0.22)}
+.ex-thumb-inner{
+  width:100%;height:100%;
+  display:flex;align-items:center;justify-content:center;
+  font-family:var(--serif);font-size:14px;font-style:italic;
+  color:rgba(250,250,248,0.3);
+}
+.ex-poster-label{font-family:var(--mono);font-size:10px;letter-spacing:0.16em;text-transform:uppercase;color:var(--ink4);margin-bottom:4px}
+.ex-poster-topic{font-family:var(--serif);font-size:17px;font-weight:400;color:var(--ink)}
+
+/* app cell */
+.exhibit-app{display:flex;align-items:center;gap:12px}
+.app-icon{
+  width:40px;height:40px;border-radius:8px;flex-shrink:0;
+  background:rgba(249,115,22,0.08);border:1px solid rgba(249,115,22,0.18);
+  display:flex;align-items:center;justify-content:center;
+  transition:background .25s;
+}
+.group-row:hover .app-icon{background:rgba(249,115,22,0.18)}
+.app-icon svg{width:16px;height:16px;stroke:var(--orange)}
+.app-label{font-family:var(--mono);font-size:10px;letter-spacing:0.16em;text-transform:uppercase;color:var(--ink4);margin-bottom:4px}
+.app-name{font-family:var(--sans);font-size:15px;font-weight:400;color:var(--ink2)}
+.app-link{
+  display:inline-flex;align-items:center;gap:4px;
+  font-family:var(--mono);font-size:10px;letter-spacing:0.13em;text-transform:uppercase;
+  color:var(--orange);text-decoration:none;margin-top:4px;
+  opacity:0;transition:opacity .25s;
+}
+.group-row:hover .app-link{opacity:1}
+
+/* ── FOOTER ── */
+footer{
+  background:var(--ink);color:var(--bg);
+  padding:5rem;display:grid;grid-template-columns:2fr 1fr 1fr;gap:4rem;
+}
+.f-logo{
+  font-family:var(--serif);font-size:30px;font-weight:300;font-style:italic;
+  color:var(--bg);margin-bottom:1rem;
+}
+.f-logo span{color:var(--orange)}
+.f-desc{
+  font-family:var(--sans);font-size:15px;line-height:1.8;
+  color:rgba(240,239,237,.4);font-weight:300;
+}
+.f-col h5{
+  font-family:var(--mono);font-size:10px;letter-spacing:0.25em;
+  text-transform:uppercase;color:var(--orange);margin-bottom:1.2rem;
+}
+.f-col ul{list-style:none}
+.f-col li{margin-bottom:.65rem}
+.f-col a{
+  font-family:var(--sans);font-size:15px;
+  color:rgba(240,239,237,.4);text-decoration:none;
+  position:relative;
+  transition:color .25s;
+}
+.f-col a::after{
+  content:'';position:absolute;left:0;bottom:-1px;
+  width:100%;height:1px;
+  background:var(--orange);
+  transform:scaleX(0);transform-origin:left center;
+  transition:transform .35s cubic-bezier(.77,0,.175,1);
+}
+.f-col a:hover{color:var(--bg)}
+.f-col a:hover::after{transform:scaleX(1)}
+.f-bottom{
+  background:var(--ink);border-top:1px solid rgba(240,239,237,.07);
+  padding:1.4rem 5rem;display:flex;justify-content:space-between;
+}
+.f-bottom span{
+  font-family:var(--mono);font-size:10px;letter-spacing:0.16em;
+  text-transform:uppercase;color:rgba(240,239,237,.22);
+}
+
+/* ── RESPONSIVE ── */
+@media(max-width:960px){
+  nav{padding:0 1.5rem}
+  .nav-links{display:none}
+  .hero{grid-template-columns:1fr}
+  .hero-right{border-left:none;border-top:1px solid var(--rule);min-height:560px}
+  .hero-left{padding:4rem 2rem}
+  .about{grid-template-columns:1fr}
+  .about-pull{border-top:1px solid var(--rule)}
+  .list-section{padding:3rem 2rem}
+  footer{grid-template-columns:1fr;padding:3rem 2rem}
+  .f-bottom{padding:1rem 2rem}
+  .stack-container{width:280px;height:385px}
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">跨校遠距教學課程計畫 <em>&mdash; 聯合展</em></div>
+  <ul class="nav-links">
+    <li><a href="#about">展覽理念</a></li>
+    <li><a href="#groups" class="nav-pill">立即探索</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-left">
+    <div class="hero-kicker">
+      <div class="kicker-line"></div>
+      <div class="kicker-text">114學年度聯合展</div>
+    </div>
+    <h1 class="hero-title">
+      跨校遠距雙語數學課：<br>海報設計與網路互動應用專題
+    </h1>
+    <p class="hero-sub">
+      集結竹科實中與鳳山高中學生的創意成果，以雙語數學為主題，融合 AI 與網路互動應用，展現新世代對數學的嶄新詮釋與表達。
+    </p>
+    <div class="hero-actions">
+      <a href="#film-section" class="btn-fill">
+        瀏覽海報與應用
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </a>
+      <a href="#about" class="btn-outline">了解更多</a>
+    </div>
+    <div class="hero-foot">
+      <div>
+        <div class="hf-num">12</div>
+        <div class="hf-label">組海報</div>
+      </div>
+      <div>
+        <div class="hf-num">12</div>
+        <div class="hf-label">個互動應用</div>
+      </div>
+      <div>
+        <div class="hf-num">2</div>
+        <div class="hf-label">所學校</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MARQUEE -->
+<div class="marquee-wrap">
+  <div class="marquee-track" id="mqTrack"></div>
+</div>
+
+<!-- FILM STRIP SECTION — 第二段落 -->
+<section id="film-section" style="
+  position:relative;
+  background:var(--bg2);
+  border-top:1px solid var(--rule);
+  z-index:1;
+  min-height:520px;
+  display:flex;align-items:center;justify-content:center;
+  overflow:hidden;
+">
+  <!-- section label -->
+  <div style="
+    position:absolute;top:3rem;left:5rem;
+    z-index:10;
+  ">
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:.5rem;">
+      <div style="width:22px;height:1px;background:var(--orange)"></div>
+      <div style="font-family:var(--mono);font-size:10px;letter-spacing:.25em;text-transform:uppercase;color:var(--orange);">參展海報展示</div>
+    </div>
+    <div style="font-family:var(--serif);font-size:28px;font-weight:300;color:var(--ink);">十二組作品</div>
+  </div>
+
+  <!-- PHASE 1: film strip scroll -->
+  <div class="ring-stage" id="ringStage" style="width:100%;height:380px;">
+    <div class="film-strip-scroll" id="filmStripScroll">
+      <div class="spr-band top" id="sprTop">
+        <span class="spr-edge-num">▲ KODAK 400TX ▲ KODAK 400TX ▲ KODAK 400TX ▲</span>
+      </div>
+      <div class="film-frames-row" id="filmFramesRow"></div>
+      <div class="spr-band bot" id="sprBot">
+        <span class="spr-edge-num">▲ KODAK 400TX ▲ KODAK 400TX ▲ KODAK 400TX ▲</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- PHASE 2: stack -->
+  <div class="stack-wrap" id="stackWrap">
+    <div class="stack-label">
+      <span id="stackGroup">Alice's Group</span>
+      <span><span id="stackCur">01</span> / 12</span>
+    </div>
+    <div class="stack-container" id="stackContainer"></div>
+    <div class="stack-nav">
+      <button class="snav-btn" id="stackPrev" aria-label="上一張">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M15 18l-6-6 6-6"/></svg>
+      </button>
+      <span class="snav-hint">點擊翻卡</span>
+      <button class="snav-btn" id="stackNext" aria-label="下一張">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 18l6-6-6-6"/></svg>
+      </button>
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section class="about" id="about">
+  <div class="about-text" style="border-right:none;">
+    <div class="section-kicker"><div class="kl"></div><div class="kt">展覽理念</div></div>
+    <h2 class="about-heading" style="font-style:italic;font-weight:700;white-space:nowrap;color:#F97316;">Mathematics Speaks All Languages</h2>
+    <p class="about-body" style="color:#1C3A20;font-weight:500;">
+      中文或英文，都是理解數學的方式；AI 則幫助我們以全新的方式理解數學。
+    </p>
+    <p class="about-body" style="color:#1C3A20;font-weight:500;">
+      我們相信，數學不只是課本裡的公式，更是一種跨文化溝通的語言。每一組的海報，都是這個信念最真實的體現。
+    </p>
+    <p class="about-body" style="color:#1C3A20;font-weight:500;">
+      十二組，十二種詮釋。邀請所有人放慢腳步，細細閱讀每一幅作品背後的數學故事。
+    </p>
+    <a href="#groups" class="about-cta">
+      探索十二幅海報 <span class="arr">→</span>
+    </a>
+  </div>
+</section>
+
+<!-- GROUP LIST -->
+<section class="list-section" id="groups">
+  <div class="list-header">
+    <h2 class="list-title">參展作品</h2>
+    <div class="list-count">12 組 · 海報 + 互動應用 · 114學年度</div>
+  </div>
+
+  <!-- column headers -->
+  <div class="exhibit-col-heads">
+    <div class="ech-spacer"></div>
+    <div class="ech-label">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+      海報
+    </div>
+    <div class="ech-label">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 3H5a2 2 0 00-2 2v4m6-6h10a2 2 0 012 2v4M9 3v18m0 0h10a2 2 0 002-2v-4M9 21H5a2 2 0 01-2-2v-4m0 0h18"/></svg>
+      網路互動應用
+    </div>
+  </div>
+
+  <div id="groupRows"></div>
+</section>
+
+
+<script>
+/* ─── 12 STUDENT GROUPS ───────────────────────────────────────
+   請將 img 欄位替換成實際海報圖路徑，例如 'posters/01.jpg'
+   填入後佔位版面自動消失，直接顯示海報圖
+   bg 為尚未提供圖片時的卡片底色
+──────────────────────────────────────────────────────────────── */
+const groups = [
+  {name:"Alice's Group",    en:'Group A',  topic:'數列與極限',     app:'互動數列探索器',   url:'', img:'', bg:'#1C1814'},
+  {name:"Betty's Group",    en:'Group B',  topic:'機率與統計',     app:'骰子實驗模擬器',   url:'', img:'', bg:'#141C18'},
+  {name:"Claire's Group",   en:'Group C',  topic:'幾何變換',       app:'對稱圖形產生器',   url:'', img:'', bg:'#18141C'},
+  {name:"Dillion's Group",  en:'Group D',  topic:'函數圖形',       app:'函數視覺化工具',   url:'', img:'', bg:'#1C1414'},
+  {name:"Elliot's Group",   en:'Group E',  topic:'線性代數',       app:'向量場互動展示',   url:'', img:'', bg:'#14181C'},
+  {name:"Fiona's Group",    en:'Group F',  topic:'微積分入門',     app:'切線斜率動態圖',   url:'', img:'', bg:'#1C1814'},
+  {name:"Grace's Group",    en:'Group G',  topic:'質數與因數',     app:'因數分解遊戲',     url:'', img:'', bg:'#141C14'},
+  {name:"Henry's Group",    en:'Group H',  topic:'三角函數',       app:'單位圓互動動畫',   url:'', img:'', bg:'#1A1418'},
+  {name:"Iris's Group",     en:'Group I',  topic:'集合論',         app:'文氏圖視覺工具',   url:'', img:'', bg:'#14181A'},
+  {name:"Julian's Group",   en:'Group J',  topic:'排列組合',       app:'排列樹狀展示器',   url:'', img:'', bg:'#1C1A14'},
+  {name:"Karen's Group",    en:'Group K',  topic:'座標幾何',       app:'圖形座標互動板',   url:'', img:'', bg:'#181418'},
+  {name:"Louis's Group",    en:'Group L',  topic:'指數與對數',     app:'指數成長模擬器',   url:'', img:'', bg:'#141A1C'},
+];
+
+/* ─── FILM STRIP → STACK ANIMATION ─── */
+(function(){
+  const ringStage   = document.getElementById('ringStage');
+  const stackWrap   = document.getElementById('stackWrap');
+  const strip       = document.getElementById('filmStripScroll');
+  const framesRow   = document.getElementById('filmFramesRow');
+  const sprTop      = document.getElementById('sprTop');
+  const sprBot      = document.getElementById('sprBot');
+
+  const FRAME_W     = 120;
+  const FRAME_GAP   = 3;
+  const HOLE_W      = 14;
+  const HOLE_GAP    = 3;
+  const SCROLL_MS   = 9000;
+
+  /* ── build sprocket holes ── */
+  const TOTAL_HOLES = groups.length * 2 + 8;
+  function addHoles(band){
+    for(let i=0;i<TOTAL_HOLES;i++){
+      const h = document.createElement('div');
+      h.className = 'spr-hole';
+      band.insertBefore(h, band.querySelector('.spr-edge-num'));
+    }
+  }
+  addHoles(sprTop);
+  addHoles(sprBot);
+
+  /* ── build frames ── */
+  groups.forEach((g, i) => {
+    const fr = document.createElement('div');
+    fr.className = 'film-fr';
+
+    let imgContent = '';
+    if(g.img){
+      imgContent = `<img src="${g.img}" alt="${g.name}">`;
+    }
+
+    fr.innerHTML = `
+      <div class="film-fr-inner" style="background:${g.bg}">
+        ${imgContent}
+        <div class="fr-num">${String(i+1).padStart(2,'0')}</div>
+        <div class="fr-sep"></div>
+        <div class="fr-name">${g.name}<br><span style="font-family:var(--mono);font-size:7px;letter-spacing:.1em;text-transform:uppercase;color:rgba(249,115,22,.55);">${g.topic}</span></div>
+        <div class="fr-dx"></div>
+      </div>
+    `;
+    framesRow.appendChild(fr);
+  });
+
+  /* ── measure total strip width & animate ── */
+  const stageW   = ringStage.offsetWidth || 500;
+  const totalW   = groups.length * (FRAME_W + FRAME_GAP) + 12;
+  const travelX  = totalW - stageW + 80;
+
+  strip.style.left = '60px';
+
+  /* use JS animation for precise control */
+  const startTime = performance.now();
+  let done = false;
+
+  function ease(t){
+    /* ease-in-out cubic */
+    return t < 0.5 ? 4*t*t*t : 1 - Math.pow(-2*t+2,3)/2;
+  }
+
+  function scrollFrame(now){
+    if(done) return;
+    const elapsed  = now - startTime;
+    const raw      = Math.min(elapsed / SCROLL_MS, 1);
+    const progress = ease(raw);
+    const x        = 60 - progress * travelX;
+    strip.style.left = x + 'px';
+
+    if(raw < 1){
+      requestAnimationFrame(scrollFrame);
+    } else {
+      done = true;
+      /* pause 0.6s then fade out & show stack */
+      setTimeout(() => collapseFilm(), 600);
+    }
+  }
+  requestAnimationFrame(scrollFrame);
+
+  function collapseFilm(){
+    /* fade out the strip */
+    strip.style.transition = 'opacity .6s ease';
+    strip.style.opacity = '0';
+    setTimeout(() => {
+      ringStage.style.display = 'none';
+      stackWrap.classList.add('visible');
+      buildStack();
+    }, 700);
+  }
+})();
+
+/* ─── STACK CAROUSEL ─── */
+let order = groups.map((_,i)=>i);
+
+function buildStack(){
+  const c = document.getElementById('stackContainer');
+  c.innerHTML = '';
+
+  order.forEach((gi, pos) => {
+    const g = groups[gi];
+    const card = document.createElement('div');
+    card.className = 'stack-card';
+    card.dataset.pos = pos < 5 ? pos : 'hidden';
+
+    const face = document.createElement('div');
+    face.className = 'card-face';
+
+    if(g.img){
+      /* ── 有海報圖 ── */
+      const img = document.createElement('img');
+      img.src = g.img; img.alt = g.name;
+      img.style.cssText = 'width:100%;height:100%;object-fit:cover;display:block;';
+      face.appendChild(img);
+    } else {
+      /* ── 佔位 ── */
+      face.style.cssText = `background:${g.bg};`;
+
+      /* large italic number watermark */
+      const wm = document.createElement('div');
+      wm.style.cssText = `
+        position:absolute;inset:0;
+        display:flex;align-items:center;justify-content:center;
+        font-family:'Cormorant Garamond',serif;
+        font-size:150px;font-style:italic;font-weight:300;
+        color:rgba(250,250,248,0.06);
+        pointer-events:none;user-select:none;line-height:1;
+      `;
+      wm.textContent = String(gi+1).padStart(2,'0');
+      face.appendChild(wm);
+
+      /* orange accent bar top */
+      const bar_top = document.createElement('div');
+      bar_top.style.cssText = `
+        position:absolute;top:0;left:0;right:0;
+        height:3px;background:#F97316;opacity:.7;
+      `;
+      face.appendChild(bar_top);
+
+      /* centre placeholder content */
+      const ph = document.createElement('div');
+      ph.style.cssText = `
+        position:relative;z-index:1;
+        display:flex;flex-direction:column;align-items:center;gap:16px;
+        text-align:center;padding:0 2rem;
+      `;
+      ph.innerHTML = `
+        <div style="
+          font-family:'DM Mono',monospace;font-size:8px;
+          letter-spacing:0.3em;text-transform:uppercase;
+          color:rgba(250,250,248,0.22);
+        ">POSTER ${String(gi+1).padStart(2,'0')}</div>
+        <div style="
+          width:40px;height:1px;background:rgba(249,115,22,.35);
+        "></div>
+        <div style="
+          font-family:'Cormorant Garamond',serif;
+          font-size:18px;font-weight:400;
+          color:rgba(250,250,248,0.55);letter-spacing:.04em;
+        ">${g.name}</div>
+        <div style="
+          font-family:'DM Mono',monospace;font-size:8px;
+          letter-spacing:0.2em;text-transform:uppercase;
+          color:rgba(249,115,22,.5);
+        ">${g.topic}</div>
+        <div style="
+          width:40px;height:1px;background:rgba(249,115,22,.35);
+        "></div>
+      `;
+      face.appendChild(ph);
+    }
+
+    /* info bar */
+    const bar = document.createElement('div');
+    bar.className = 'card-bar';
+    bar.innerHTML = `
+      <div class="card-name">
+        <em>${g.en} · ${g.topic}</em>
+        ${g.name}
+      </div>
+      <div class="card-num-big">${String(gi+1).padStart(2,'0')}</div>
+    `;
+    face.appendChild(bar);
+    card.appendChild(face);
+
+    /* interactions on top card */
+    if(pos === 0){
+      card.addEventListener('click', () => advance(1));
+      let tx = 0;
+      card.addEventListener('touchstart', e => { tx = e.touches[0].clientX; });
+      card.addEventListener('touchend',   e => {
+        const dx = e.changedTouches[0].clientX - tx;
+        if(Math.abs(dx) > 40) advance(dx < 0 ? 1 : -1);
+      });
+      let mx = 0, dragging = false;
+      card.addEventListener('mousedown', e => { mx = e.clientX; dragging = true; });
+      document.addEventListener('mouseup', e => {
+        if(!dragging) return; dragging = false;
+        const dx = e.clientX - mx;
+        if(Math.abs(dx) > 55) advance(dx < 0 ? 1 : -1);
+      });
+    }
+    c.appendChild(card);
+  });
+
+  document.getElementById('stackCur').textContent   = String(order[0]+1).padStart(2,'0');
+  document.getElementById('stackGroup').textContent = groups[order[0]].name;
+}
+
+function advance(dir = 1){
+  if(dir > 0){ const f = order.shift(); order.push(f); }
+  else        { const b = order.pop();  order.unshift(b); }
+  buildStack();
+}
+
+document.getElementById('stackNext').addEventListener('click', () => advance(1));
+document.getElementById('stackPrev').addEventListener('click', () => advance(-1));
+buildStack();
+
+/* ─── MARQUEE ─── */
+const mq = document.getElementById('mqTrack');
+[...groups, ...groups].forEach(g => {
+  const el = document.createElement('span');
+  el.className = 'mq-item';
+  el.innerHTML = `${g.name} <span class="mq-sep">·</span>`;
+  mq.appendChild(el);
+});
+
+/* ─── GROUP LIST — 海報 + 應用 並排 ─── */
+const rows = document.getElementById('groupRows');
+groups.forEach((g, i) => {
+  const row = document.createElement('div');
+  row.className = 'group-row';
+
+  /* poster thumb bg */
+  const thumbStyle = g.img
+    ? `background:url('${g.img}') center/cover`
+    : `background:${g.bg}`;
+
+  const thumbInner = g.img ? '' : `
+    <div class="ex-thumb-inner">${String(i+1).padStart(2,'0')}</div>
+  `;
+
+  row.innerHTML = `
+    <div class="row-left">
+      <div class="rn">${String(i+1).padStart(2,'0')}</div>
+      <div class="ri">
+        <div class="ri-name">${g.name} <span class="row-arrow">→</span></div>
+        <div class="ri-en">${g.en}</div>
+      </div>
+    </div>
+
+    <div class="exhibit-poster">
+      <div class="ex-thumb" style="${thumbStyle}">${thumbInner}</div>
+      <div>
+        <div class="ex-poster-label">Poster · 海報</div>
+        <div class="ex-poster-topic">${g.topic}</div>
+      </div>
+    </div>
+
+    <div class="exhibit-app">
+      <div class="app-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5">
+          <path stroke="currentColor" d="M9 3H5a2 2 0 00-2 2v4m6-6h10a2 2 0 012 2v4M9 3v18m0 0h10a2 2 0 002-2v-4M9 21H5a2 2 0 01-2-2v-4m0 0h18"/>
+        </svg>
+      </div>
+      <div>
+        <div class="app-label">Web App · 互動應用</div>
+        <div class="app-name">${g.app}</div>
+        <a href="${g.url || '#'}" class="app-link" target="_blank" onclick="event.stopPropagation()">
+          開啟應用 →
+        </a>
+      </div>
+    </div>
+  `;
+
+  row.addEventListener('click', () => {
+    const idx = order.indexOf(i);
+    if(idx > 0){ order.splice(idx,1); order.unshift(i); }
+    buildStack();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+  rows.appendChild(row);
+});
+</script>
+
+<!-- ── MATH PARALLAX CANVAS ── -->
+<canvas id="mathCanvas" style="
+  position:fixed;inset:0;width:100%;height:100%;
+  pointer-events:none;z-index:0;
+"></canvas>
+
+<script>
+(function(){
+  const canvas = document.getElementById('mathCanvas');
+  const ctx    = canvas.getContext('2d');
+  let W, H, scrollY = 0, raf;
+
+  /* ── colour palette: warm brown / cool gray on green bg ── */
+  const PALETTE = [
+    'rgba(101, 80, 55, IDX)',   /* warm brown */
+    'rgba(130,112, 88, IDX)',   /* tan */
+    'rgba( 90, 96, 90, IDX)',   /* grey-green */
+    'rgba(110,100, 85, IDX)',   /* khaki */
+    'rgba( 75, 85, 78, IDX)',   /* dark sage */
+  ];
+  function col(i, a){ return PALETTE[i % PALETTE.length].replace('IDX', a); }
+
+  /* ── element definitions ── */
+  /* axes 和 sin 移除（視覺太搶眼），combination 只出現一次 */
+  const TYPES = [
+    'circle','circle','circle',
+    'vector','vector','triangle','triangle',
+    'formula','formula','formula','grid',
+    'spiral','spiral','polar','polar',
+    'dots','dots','parabola','parabola',
+    'combination',
+    'circle','vector','formula',
+    'grid','polar','parabola',
+    'triangle','spiral'
+  ];
+
+  /* deterministic pseudo-random from seed */
+  function rng(seed){ return ((Math.sin(seed * 127.1 + 311.7) * 43758.5453) % 1 + 1) % 1; }
+
+  /* build element list once */
+  const ELEM_COUNT = 28;
+  const elems = Array.from({length: ELEM_COUNT}, (_, k) => ({
+    type:    TYPES[Math.floor(rng(k * 3.1) * TYPES.length)],
+    x:       rng(k * 1.7),
+    y:       rng(k * 2.3),
+    size:    100 + rng(k * 4.1) * 160,
+    alpha:   0.07 + rng(k * 5.3) * 0.08,
+    speed:   0.15 + rng(k * 6.7) * 0.55,
+    rot:     rng(k * 7.9) * Math.PI * 2,
+    colorIdx: Math.floor(rng(k * 8.2) * PALETTE.length),
+    param:   rng(k * 9.1),
+  }));
+
+  function resize(){
+    W = canvas.width  = window.innerWidth;
+    H = canvas.height = window.innerHeight;
+  }
+
+  /* ── DRAW FUNCTIONS ── */
+
+  function drawSin(ctx, s, a, col){
+    ctx.beginPath();
+    const amp = s * 0.35, freq = (0.012 + s * 0.003);
+    for(let x = -s; x <= s; x += 2){
+      const y = amp * Math.sin(freq * x * Math.PI);
+      x === -s ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+    }
+    ctx.strokeStyle = col;
+    ctx.lineWidth = 1.5;
+    ctx.stroke();
+    /* x-axis */
+    ctx.beginPath(); ctx.moveTo(-s, 0); ctx.lineTo(s, 0);
+    ctx.strokeStyle = col.replace(/[\d.]+\)$/, '0.4)');
+    ctx.lineWidth = 0.6; ctx.stroke();
+  }
+
+  function drawCircle(ctx, s, a, col, param){
+    const r = s * 0.42;
+    ctx.beginPath(); ctx.arc(0, 0, r, 0, Math.PI * 2);
+    ctx.strokeStyle = col; ctx.lineWidth = 1.2; ctx.stroke();
+    /* radius line */
+    const angle = param * Math.PI * 2;
+    ctx.beginPath(); ctx.moveTo(0,0); ctx.lineTo(r*Math.cos(angle), r*Math.sin(angle));
+    ctx.strokeStyle = col; ctx.lineWidth = 1; ctx.stroke();
+    /* arc label arc */
+    ctx.beginPath(); ctx.arc(0,0, r*0.28, 0, angle, angle < 0);
+    ctx.strokeStyle = col.replace(/[\d.]+\)$/, '0.6)');
+    ctx.lineWidth = 0.8; ctx.stroke();
+  }
+
+  function drawVector(ctx, s, a, col, param){
+    const angle = param * Math.PI * 1.5 - 0.3;
+    const len = s * 0.8;
+    const ex = len * Math.cos(angle), ey = len * Math.sin(angle);
+    ctx.beginPath(); ctx.moveTo(0,0); ctx.lineTo(ex, ey);
+    ctx.strokeStyle = col; ctx.lineWidth = 1.4; ctx.stroke();
+    /* arrowhead */
+    const ah = 10, aw = 5;
+    const nx = Math.cos(angle), ny = Math.sin(angle);
+    ctx.beginPath();
+    ctx.moveTo(ex, ey);
+    ctx.lineTo(ex - ah*nx + aw*ny, ey - ah*ny - aw*nx);
+    ctx.lineTo(ex - ah*nx - aw*ny, ey - ah*ny + aw*nx);
+    ctx.closePath(); ctx.fillStyle = col; ctx.fill();
+    /* second vector */
+    const a2 = angle - 0.9, l2 = s * 0.55;
+    const ex2 = l2*Math.cos(a2), ey2 = l2*Math.sin(a2);
+    ctx.beginPath(); ctx.moveTo(0,0); ctx.lineTo(ex2, ey2);
+    ctx.strokeStyle = col.replace(/[\d.]+\)$/, '0.5)');
+    ctx.lineWidth = 1; ctx.stroke();
+  }
+
+  function drawTriangle(ctx, s, a, col){
+    const r = s * 0.45;
+    ctx.beginPath();
+    for(let i=0;i<3;i++){
+      const ang = (i/3)*Math.PI*2 - Math.PI/2;
+      i===0 ? ctx.moveTo(r*Math.cos(ang),r*Math.sin(ang))
+            : ctx.lineTo(r*Math.cos(ang),r*Math.sin(ang));
+    }
+    ctx.closePath(); ctx.strokeStyle = col; ctx.lineWidth = 1.2; ctx.stroke();
+    /* right-angle mark */
+    const x0=r*Math.cos(-Math.PI/2), y0=r*Math.sin(-Math.PI/2);
+    const m = 10;
+    ctx.beginPath(); ctx.moveTo(x0+m,y0); ctx.lineTo(x0+m,y0+m); ctx.lineTo(x0,y0+m);
+    ctx.strokeStyle = col.replace(/[\d.]+\)$/, '0.55)');
+    ctx.lineWidth = 0.8; ctx.stroke();
+  }
+
+  function drawFormula(ctx, s, a, col, param){
+    const formulas = [
+      'sin²θ + cos²θ = 1',
+      'eⁱᵖⁱ + 1 = 0',
+      'C(n,r) = n! / r!(n-r)!',
+      '∫₀ᵖ sin x dx = 2',
+      'lim(x→∞) (1+1/x)ˣ = e',
+      'a² + b² = c²',
+      'P(A∪B) = P(A)+P(B)−P(A∩B)',
+      '|v| = √(x²+y²)',
+    ];
+    const txt = formulas[Math.floor(param * formulas.length)];
+    ctx.font = `${Math.round(s * 0.13)}px 'DM Mono', monospace`;
+    ctx.fillStyle = col; ctx.textAlign = 'center';
+    ctx.fillText(txt, 0, 0);
+  }
+
+  function drawGrid(ctx, s, a, col){
+    const step = s * 0.22, n = 3;
+    ctx.strokeStyle = col; ctx.lineWidth = 0.7;
+    for(let i=-n;i<=n;i++){
+      ctx.beginPath(); ctx.moveTo(i*step,-n*step); ctx.lineTo(i*step,n*step); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(-n*step,i*step); ctx.lineTo(n*step,i*step); ctx.stroke();
+    }
+    /* axes bolder */
+    ctx.strokeStyle = col.replace(/[\d.]+\)$/, (a*1.8).toFixed(3)+')');
+    ctx.lineWidth = 1.2;
+    ctx.beginPath(); ctx.moveTo(-n*step,0); ctx.lineTo(n*step,0); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(0,-n*step); ctx.lineTo(0,n*step); ctx.stroke();
+  }
+
+  function drawSpiral(ctx, s, a, col){
+    ctx.beginPath();
+    for(let t=0; t<6*Math.PI; t+=0.05){
+      const r = s * 0.08 * t / (2*Math.PI);
+      const x = r * Math.cos(t), y = r * Math.sin(t);
+      t===0 ? ctx.moveTo(x,y) : ctx.lineTo(x,y);
+    }
+    ctx.strokeStyle = col; ctx.lineWidth = 1; ctx.stroke();
+  }
+
+  function drawCombination(ctx, s, a, col, param){
+    /* Pascal's triangle — hexagonal honeycomb cells with numbers */
+    const ROWS = 6;
+    /* hex cell radius — shrink to fit s */
+    const R = s * 0.085;           /* circumradius of each hex */
+    const HW = R * Math.cos(Math.PI/6);  /* half-width (flat-top hex) */
+    const rowH = R * 1.5;          /* vertical step between row centres */
+    const colW = HW * 2;           /* horizontal step between hex centres */
+
+    /* precompute Pascal values */
+    const pascal = [];
+    for(let r=0;r<ROWS;r++){
+      pascal[r]=[];
+      for(let c=0;c<=r;c++){
+        if(c===0||c===r) pascal[r][c]=1;
+        else pascal[r][c]=pascal[r-1][c-1]+pascal[r-1][c];
+      }
+    }
+
+    /* total height & width for centering */
+    const totalH = (ROWS - 1) * rowH;
+    const startY = -totalH / 2;
+
+    const strokeCol = col;
+    const fillCol   = col.replace(/[\d.]+\)$/, (a * 0.35).toFixed(3)+')');
+    const numCol    = col.replace(/[\d.]+\)$/, (Math.min(a * 2.2, 0.55)).toFixed(3)+')');
+
+    /* helper: draw one flat-top hexagon centred at (cx,cy) */
+    function hex(cx, cy){
+      ctx.beginPath();
+      for(let i=0;i<6;i++){
+        const ang = Math.PI/6 + i * Math.PI/3;
+        const px = cx + R * Math.cos(ang);
+        const py = cy + R * Math.sin(ang);
+        i===0 ? ctx.moveTo(px,py) : ctx.lineTo(px,py);
+      }
+      ctx.closePath();
+    }
+
+    const fontSize = Math.max(Math.round(R * 0.72), 7);
+    ctx.font = `${fontSize}px 'DM Mono',monospace`;
+    ctx.textAlign    = 'center';
+    ctx.textBaseline = 'middle';
+
+    for(let r=0;r<ROWS;r++){
+      const cy = startY + r * rowH;
+      const rowOffset = -(r * colW / 2);   /* centre each row */
+      for(let c=0;c<=r;c++){
+        const cx = rowOffset + c * colW;
+
+        /* fill */
+        hex(cx, cy);
+        ctx.fillStyle = fillCol;
+        ctx.fill();
+
+        /* stroke */
+        hex(cx, cy);
+        ctx.strokeStyle = strokeCol;
+        ctx.lineWidth   = 0.9;
+        ctx.stroke();
+
+        /* number */
+        const val = pascal[r][c];
+        ctx.fillStyle = numCol;
+        ctx.fillText(String(val), cx, cy);
+      }
+    }
+  }
+
+  function drawPolar(ctx, s, a, col, param){
+    /* rose curve r = cos(kθ) */
+    const k = Math.round(2 + param * 4);
+    ctx.beginPath();
+    for(let t=0; t<Math.PI*2; t+=0.02){
+      const r = s * 0.44 * Math.abs(Math.cos(k * t));
+      const x = r * Math.cos(t), y = r * Math.sin(t);
+      t===0 ? ctx.moveTo(x,y) : ctx.lineTo(x,y);
+    }
+    ctx.closePath(); ctx.strokeStyle = col; ctx.lineWidth = 1; ctx.stroke();
+  }
+
+  function drawAxes(ctx, s, a, col){
+    const len = s * 0.5;
+    ctx.strokeStyle = col; ctx.lineWidth = 1.1;
+    [[-len,0,len,0],[0,-len,0,len]].forEach(([x1,y1,x2,y2])=>{
+      ctx.beginPath(); ctx.moveTo(x1,y1); ctx.lineTo(x2,y2); ctx.stroke();
+    });
+    /* tick marks */
+    const tick = 5, step = len/4;
+    for(let i=-4;i<=4;i++){
+      if(i===0) continue;
+      ctx.beginPath(); ctx.moveTo(i*step,-tick); ctx.lineTo(i*step,tick); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(-tick,i*step); ctx.lineTo(tick,i*step); ctx.stroke();
+    }
+  }
+
+  function drawDots(ctx, s, a, col){
+    /* scatter plot feel */
+    for(let i=0;i<18;i++){
+      const r2 = rng(i*1.3)*s*0.45;
+      const th = rng(i*2.7)*Math.PI*2;
+      ctx.beginPath(); ctx.arc(r2*Math.cos(th), r2*Math.sin(th), 2.5+rng(i)*4, 0, Math.PI*2);
+      ctx.fillStyle = col; ctx.fill();
+    }
+  }
+
+  function drawParabola(ctx, s, a, col, param){
+    const a2 = (0.8 + param * 2) / s;
+    ctx.beginPath();
+    for(let x=-s*0.5; x<=s*0.5; x+=2){
+      const y = a2 * x * x - s * 0.3;
+      x===-Math.round(s*0.5) ? ctx.moveTo(x,y) : ctx.lineTo(x,y);
+    }
+    ctx.strokeStyle = col; ctx.lineWidth = 1.3; ctx.stroke();
+    /* vertex dot */
+    ctx.beginPath(); ctx.arc(0, -s*0.3, 3, 0, Math.PI*2);
+    ctx.fillStyle = col; ctx.fill();
+  }
+
+  /* ── RENDER LOOP ── */
+  function draw(){
+    ctx.clearRect(0, 0, W, H);
+    const pageH = Math.max(document.body.scrollHeight, H);
+
+    elems.forEach(el => {
+      /* parallax: each elem moves at different speed */
+      const baseY = el.y * pageH;
+      const screenY = baseY - scrollY * el.speed;
+
+      /* only draw if on screen ± margin */
+      if(screenY < -el.size * 2 || screenY > H + el.size * 2) return;
+
+      const x = el.x * W;
+      const c = col(el.colorIdx, el.alpha);
+
+      ctx.save();
+      ctx.translate(x, screenY);
+      ctx.rotate(el.rot);
+
+      switch(el.type){
+        case 'sin':         drawSin(ctx, el.size, el.alpha, c); break;
+        case 'circle':      drawCircle(ctx, el.size, el.alpha, c, el.param); break;
+        case 'vector':      drawVector(ctx, el.size, el.alpha, c, el.param); break;
+        case 'triangle':    drawTriangle(ctx, el.size, el.alpha, c); break;
+        case 'formula':     drawFormula(ctx, el.size, el.alpha, c, el.param); break;
+        case 'grid':        drawGrid(ctx, el.size, el.alpha, c); break;
+        case 'spiral':      drawSpiral(ctx, el.size, el.alpha, c); break;
+        case 'combination': drawCombination(ctx, el.size, el.alpha, c, el.param); break;
+        case 'polar':       drawPolar(ctx, el.size, el.alpha, c, el.param); break;
+        case 'axes':        drawAxes(ctx, el.size, el.alpha, c); break;
+        case 'dots':        drawDots(ctx, el.size, el.alpha, c); break;
+        case 'parabola':    drawParabola(ctx, el.size, el.alpha, c, el.param); break;
+      }
+      ctx.restore();
+    });
+  }
+
+  function onScroll(){ scrollY = window.scrollY; draw(); }
+  function loop(){ draw(); /* no RAF loop needed — only redraw on scroll/resize */ }
+
+  window.addEventListener('scroll', onScroll, {passive:true});
+  window.addEventListener('resize', ()=>{ resize(); draw(); });
+
+  resize();
+  draw();
+})();
+</script>
+</body>
+</html>
+
