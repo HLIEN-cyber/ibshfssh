@@ -673,6 +673,7 @@ nav{
 
 /* poster cell */
 .exhibit-poster{display:flex;align-items:center;gap:12px}
+.poster-link{color:inherit;text-decoration:none}
 .ex-thumb{
   width:46px;height:62px;border-radius:3px;overflow:hidden;flex-shrink:0;
   box-shadow:0 3px 10px rgba(26,31,24,0.15);transition:box-shadow .25s;
@@ -1195,13 +1196,13 @@ groups.forEach((g, i) => {
       </div>
     </div>
 
-    <div class="exhibit-poster">
+    <a href="${g.url || '#'}" class="exhibit-poster poster-link" target="_blank" onclick="event.stopPropagation()">
       <div class="ex-thumb" style="${thumbStyle}">${thumbInner}</div>
       <div>
         <div class="ex-poster-label">Poster · 海報</div>
         <div class="ex-poster-topic">${g.topic}</div>
       </div>
-    </div>
+    </a>
 
     <div class="exhibit-app">
       <div class="app-icon">
