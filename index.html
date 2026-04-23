@@ -422,7 +422,20 @@ nav{
 .stack-wrap{
   position:relative;
   display:none;
-  padding:3rem;
+  padding:3.2rem 2rem 2.6rem;
+  width:100%;
+  align-items:center;
+}
+.stack-wrap::before{
+  content:'';
+  position:absolute;
+  left:0;right:0;
+  top:45%;
+  height:58%;
+  transform:translateY(-50%);
+  background:linear-gradient(90deg,rgba(244,246,243,0.45) 0%,rgba(244,246,243,0.78) 30%,rgba(244,246,243,0.82) 70%,rgba(244,246,243,0.45) 100%);
+  pointer-events:none;
+  z-index:0;
 }
 .stack-wrap.visible{
   display:flex;flex-direction:column;align-items:center;
@@ -437,41 +450,54 @@ nav{
 }
 .stack-label span{color:var(--orange)}
 
+.stack-stage{
+  position:relative;
+  width:min(100%,1100px);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  min-height:520px;
+}
+
 .stack-container{
-  position:relative;width:320px;height:440px;perspective:1200px;
+  position:relative;width:365px;height:520px;perspective:1200px;
 }
 .stack-card{
   position:absolute;width:100%;height:100%;
-  border-radius:6px;overflow:hidden;cursor:pointer;
+  border-radius:14px;overflow:hidden;cursor:pointer;
   transition:transform .7s cubic-bezier(.22,1,.36,1),
              opacity .6s ease,box-shadow .5s ease;
-  will-change:transform;transform-origin:bottom center;
+  will-change:transform;transform-origin:center center;
 }
 .stack-card[data-pos="0"]{
   transform:translateY(0) rotate(0deg) scale(1);z-index:10;
-  box-shadow:0 24px 56px rgba(17,17,16,0.14),0 2px 8px rgba(17,17,16,0.08);
+  box-shadow:0 24px 56px rgba(17,17,16,0.28),0 2px 8px rgba(17,17,16,0.12);
 }
 .stack-card[data-pos="1"]{
-  transform:translateY(13px) rotate(2.2deg) scale(.965);z-index:9;
-  box-shadow:0 12px 28px rgba(17,17,16,0.10);
+  transform:translateX(-300px) translateY(6px) rotate(-8deg) scale(.82);z-index:8;
+  box-shadow:0 14px 30px rgba(17,17,16,0.14);
+  opacity:.28;
+  filter:saturate(.35) brightness(1.08);
 }
 .stack-card[data-pos="2"]{
-  transform:translateY(24px) rotate(-2.8deg) scale(.932);z-index:8;
-  box-shadow:0 6px 16px rgba(17,17,16,0.08);
+  transform:translateX(300px) translateY(6px) rotate(8deg) scale(.82);z-index:8;
+  box-shadow:0 14px 30px rgba(17,17,16,0.14);
+  opacity:.28;
+  filter:saturate(.35) brightness(1.08);
 }
 .stack-card[data-pos="3"]{
-  transform:translateY(33px) rotate(1.8deg) scale(.9);z-index:7;opacity:.55;
+  transform:translateX(-380px) translateY(12px) rotate(-10deg) scale(.72);z-index:7;opacity:0;
 }
 .stack-card[data-pos="4"]{
-  transform:translateY(40px) rotate(-1.2deg) scale(.87);z-index:6;opacity:.25;
+  transform:translateX(380px) translateY(12px) rotate(10deg) scale(.72);z-index:7;opacity:0;
 }
 .stack-card[data-pos="hidden"]{
-  transform:translateY(-60px) scale(.82) rotate(-3deg);
+  transform:translateY(-40px) scale(.78) rotate(-3deg);
   opacity:0;z-index:0;pointer-events:none;
 }
 .stack-card[data-pos="0"]:hover{
-  transform:translateY(-5px) scale(1.01);
-  box-shadow:0 36px 72px rgba(17,17,16,0.18);
+  transform:translateY(-6px) scale(1.01);
+  box-shadow:0 36px 72px rgba(17,17,16,0.24);
 }
 
 .card-face{
@@ -499,20 +525,26 @@ nav{
   color:rgba(250,250,248,0.22);line-height:1;
 }
 
-.stack-nav{
-  margin-top:1.8rem;display:flex;align-items:center;justify-content:center;gap:1rem;
-}
 .snav-btn{
-  width:34px;height:34px;border-radius:50%;
-  border:1px solid var(--rule);background:rgba(244,246,243,0.8);
-  color:var(--ink3);display:flex;align-items:center;justify-content:center;
-  cursor:pointer;transition:all .25s;
+  width:64px;height:64px;border-radius:50%;
+  border:none;background:#46B85A;
+  color:#fff;display:flex;align-items:center;justify-content:center;
+  cursor:pointer;transition:transform .22s ease, filter .22s ease, background .22s ease;
+  box-shadow:0 12px 24px rgba(0,0,0,.12);
+  position:absolute;top:50%;transform:translateY(-50%);
+  z-index:15;
 }
-.snav-btn:hover{border-color:var(--orange);color:var(--orange)}
-.snav-btn svg{width:13px;height:13px}
+.snav-btn:hover{background:#3ba84e;transform:translateY(-50%) scale(1.04);filter:brightness(1.02)}
+.snav-btn svg{width:25px;height:25px;stroke-width:3}
+#stackPrev{left:34px}
+#stackNext{right:34px}
+.stack-nav{
+  margin-top:1.4rem;
+}
 .snav-hint{
   font-family:var(--mono);font-size:11px;letter-spacing:0.18em;
   text-transform:uppercase;color:var(--ink4);
+  text-align:center;
 }
 
 /* ── MARQUEE ── */
@@ -766,7 +798,14 @@ footer{
   .list-section{padding:3rem 2rem}
   footer{grid-template-columns:1fr;padding:3rem 2rem}
   .f-bottom{padding:1rem 2rem}
-  .stack-container{width:280px;height:385px}
+  .stack-stage{min-height:430px}
+  .stack-container{width:280px;height:390px}
+  .stack-card[data-pos="1"]{transform:translateX(-165px) translateY(8px) rotate(-7deg) scale(.78)}
+  .stack-card[data-pos="2"]{transform:translateX(165px) translateY(8px) rotate(7deg) scale(.78)}
+  #stackPrev{left:8px}
+  #stackNext{right:8px}
+  .snav-btn{width:52px;height:52px}
+  .snav-btn svg{width:21px;height:21px}
 }
 </style>
 </head>
@@ -865,15 +904,17 @@ footer{
       <span id="stackGroup">Alice's Group</span>
       <span><span id="stackCur">01</span> / 12</span>
     </div>
-    <div class="stack-container" id="stackContainer"></div>
-    <div class="stack-nav">
+    <div class="stack-stage">
       <button class="snav-btn" id="stackPrev" aria-label="上一張">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M15 18l-6-6 6-6"/></svg>
       </button>
-      <span class="snav-hint">點擊翻卡</span>
+      <div class="stack-container" id="stackContainer"></div>
       <button class="snav-btn" id="stackNext" aria-label="下一張">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 18l6-6-6-6"/></svg>
       </button>
+    </div>
+    <div class="stack-nav">
+      <span class="snav-hint">點擊海報或左右按鈕切換</span>
     </div>
   </div>
 </section>
