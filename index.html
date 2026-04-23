@@ -926,6 +926,8 @@ footer{
    填入後佔位版面自動消失，直接顯示海報圖
    bg 為尚未提供圖片時的卡片底色
 ──────────────────────────────────────────────────────────────── */
+const posterImages = Array.from({length: 12}, (_, i) => `${String(i + 1).padStart(2, '0')}.png`);
+
 const groups = [
   {name:"Alice's Group",    en:'Group A',  topic:'數列與極限',     app:'互動數列探索器',   url:'', img:'', bg:'#1C1814'},
   {name:"Betty's Group",    en:'Group B',  topic:'Vector Analysis of Baseball Hitting', app:'骰子實驗模擬器',   url:'https://canva.link/6pvrpj69vfbmpvg', img:'', bg:'#141C18'},
@@ -939,7 +941,10 @@ const groups = [
   {name:"Julian's Group",   en:'Group J',  topic:'TriMaster',                              app:'排列樹狀展示器',   url:'https://www.canva.com/design/DAG2k4mAYFo/5atcaTNpGsVa0bEiW4f13Q/view?utm_content=DAG2k4mAYFo&utm_campaign=designshare&utm_medium=link2&utm_source=uniquelinks&utlId=h8ae6c36cc9', img:'', bg:'#1C1A14'},
   {name:"Karen's Group",    en:'Group K',  topic:'Understanding Conditional Probability',  app:'圖形座標互動板',   url:'https://www.canva.com/design/DAG2ArobgxU/OPB30Qwk8jfXq9gJPNAdCQ/view?utm_content=DAG2ArobgxU&utm_campaign=designshare&utm_medium=link2&utm_source=uniquelinks&utlId=hae361135ec', img:'', bg:'#181418'},
   {name:"Louis's Group",    en:'Group L',  topic:'Sinusoidal Functions',                   app:'指數成長模擬器',   url:'https://www.canva.com/design/DAG2lfUXvBk/3RFAY0IyIWG8WCb3Nx0d4w/view?utm_content=DAG2lfUXvBk&utm_campaign=designshare&utm_medium=link2&utm_source=uniquelinks&utlId=h82ee6e7551', img:'', bg:'#141A1C'},
-];
+].map((group, index) => ({
+  ...group,
+  img: posterImages[index] ?? group.img
+}));
 
 /* ─── FILM STRIP → STACK ANIMATION ─── */
 (function(){
