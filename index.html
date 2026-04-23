@@ -253,7 +253,7 @@ nav{
   font-style:normal;
   color:#F5F0E8;
   text-shadow:0 2px 32px rgba(0,0,0,0.6);
-  white-space:nowrap;
+  word-break:break-word;
 }
 .t-italic{font-style:italic;color:var(--orange);display:block}
 .t-outline{
@@ -788,9 +788,59 @@ footer{
 }
 
 /* ── RESPONSIVE ── */
+
+/* Hamburger button */
+.nav-hamburger{
+  display:none;
+  flex-direction:column;
+  gap:5px;
+  cursor:pointer;
+  padding:6px 4px;
+  background:none;
+  border:none;
+  flex-shrink:0;
+}
+.nav-hamburger span{
+  display:block;
+  width:22px;height:2px;
+  background:rgba(240,239,237,0.8);
+  border-radius:2px;
+  transition:transform .3s ease,opacity .25s ease;
+}
+.nav-hamburger.open span:nth-child(1){transform:translateY(7px) rotate(45deg);}
+.nav-hamburger.open span:nth-child(2){opacity:0;}
+.nav-hamburger.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg);}
+
+/* Mobile dropdown nav */
+.mobile-nav{
+  display:none;
+  position:fixed;top:58px;left:0;right:0;
+  background:rgba(28,48,32,0.97);
+  backdrop-filter:blur(16px);
+  border-bottom:1px solid rgba(249,115,22,0.3);
+  z-index:198;
+  flex-direction:column;
+  padding:.5rem 0;
+}
+.mobile-nav.open{display:flex;}
+.mobile-nav li{list-style:none;border-bottom:1px solid rgba(240,239,237,0.05);}
+.mobile-nav li:last-child{border-bottom:none;}
+.mobile-nav a{
+  display:block;padding:.9rem 1.5rem;
+  font-family:var(--mono);font-size:11px;font-weight:400;
+  letter-spacing:0.2em;text-transform:uppercase;
+  color:rgba(240,239,237,0.6);text-decoration:none;
+  transition:color .25s,background .25s;
+}
+.mobile-nav a:hover,.mobile-nav a:active{color:var(--orange);background:rgba(249,115,22,0.06);}
+
+/* Film section label */
+.film-section-label{position:absolute;top:3rem;left:5rem;z-index:10;}
+
 @media(max-width:960px){
   nav{padding:0 1.5rem}
   .nav-links{display:none}
+  .nav-hamburger{display:flex}
   .hero{grid-template-columns:1fr}
   .hero-right{border-left:none;border-top:1px solid var(--rule);min-height:560px}
   .hero-left{padding:4rem 2rem}
@@ -810,6 +860,64 @@ footer{
   #stackNext{right:8px}
   .snav-btn{width:52px;height:52px}
   .snav-btn svg{width:21px;height:21px}
+  .film-section-label{left:1.5rem;top:1.5rem;}
+}
+
+@media(max-width:768px){
+  .hero-left{padding:3rem 1.5rem 2.5rem}
+  .hero-foot{gap:1.5rem;margin-top:2rem;padding-top:1.5rem}
+  .hf-num{font-size:38px}
+  .about-text{padding:4rem 2rem}
+  .about-heading{font-size:clamp(22px,5vw,38px)!important}
+  .list-section{padding:2.5rem 1.5rem}
+  .pull-stats{gap:1.5rem}
+  .ps-num{font-size:36px}
+  .stack-container{width:240px;height:340px}
+  .stack-stage{min-height:380px}
+  .stack-card[data-pos="1"]{transform:translateX(-140px) translateY(8px) rotate(-7deg) scale(.76)}
+  .stack-card[data-pos="2"]{transform:translateX(140px) translateY(8px) rotate(7deg) scale(.76)}
+  #stackPrev{left:4px}
+  #stackNext{right:4px}
+  .snav-btn{width:46px;height:46px}
+  .snav-btn svg{width:19px;height:19px}
+  footer{padding:2.5rem 1.5rem}
+  .f-bottom{padding:1rem 1.5rem}
+  #film-section{min-height:420px!important}
+  .ring-stage{height:300px!important}
+}
+
+@media(max-width:480px){
+  .hero-left{padding:2.5rem 1rem 2rem}
+  .hero-kicker{margin-bottom:1rem}
+  .hero-title{font-size:clamp(20px,6.5vw,28px)!important;line-height:1.3}
+  .hero-sub{font-size:14px;max-width:100%}
+  .hero-actions{flex-direction:column;align-items:stretch;gap:.6rem}
+  .btn-fill,.btn-outline{width:100%;justify-content:center;padding:13px 20px}
+  .hero-foot{gap:1rem;flex-wrap:wrap}
+  .hf-num{font-size:30px}
+  .about-text{padding:2.5rem 1rem}
+  .about-heading{font-size:clamp(18px,5.5vw,26px)!important}
+  .about-body{font-size:14px}
+  .list-section{padding:1.5rem .8rem}
+  .list-header{flex-direction:column;align-items:flex-start;gap:.5rem}
+  .exhibit-col-heads{display:none}
+  .group-row{grid-template-columns:1fr!important;min-width:0!important;gap:.6rem;padding:.9rem 0}
+  .exhibit-poster,.exhibit-app{padding-left:0}
+  .ex-poster-topic,.app-name{white-space:normal!important}
+  .stack-container{width:200px;height:280px}
+  .stack-stage{min-height:320px}
+  .stack-card[data-pos="1"]{transform:translateX(-108px) translateY(6px) rotate(-6deg) scale(.73);opacity:.18}
+  .stack-card[data-pos="2"]{transform:translateX(108px) translateY(6px) rotate(6deg) scale(.73);opacity:.18}
+  #stackPrev{left:0}
+  #stackNext{right:0}
+  .snav-btn{width:40px;height:40px}
+  .snav-btn svg{width:16px;height:16px}
+  footer{padding:2rem 1rem}
+  .f-bottom{padding:.9rem 1rem;flex-direction:column;gap:.4rem;text-align:center}
+  #film-section{min-height:340px!important}
+  .ring-stage{height:240px!important}
+  .film-section-label{left:1rem;top:1rem;}
+  .film-section-label > div:last-child{font-size:20px!important}
 }
 </style>
 </head>
@@ -824,7 +932,16 @@ footer{
     <li><a href="#about">展覽理念</a></li>
     <li><a href="#groups">立即探索</a></li>
   </ul>
+  <button class="nav-hamburger" id="navHamburger" aria-label="開啟選單" aria-expanded="false">
+    <span></span><span></span><span></span>
+  </button>
 </nav>
+<ul class="mobile-nav" id="mobileNav" aria-label="手機導覽">
+  <li><a href="#hero">回到主頁</a></li>
+  <li><a href="#film-section">海報展區</a></li>
+  <li><a href="#about">展覽理念</a></li>
+  <li><a href="#groups">立即探索</a></li>
+</ul>
 
 <!-- HERO -->
 <section class="hero" id="hero">
@@ -838,7 +955,7 @@ footer{
       跨校遠距雙語數學課：<br>海報設計與網路互動應用專題
     </h1>
     <p class="hero-sub">
-      集結竹科實中與鳳山高中學生的創意成果，以雙語數學為主題，融合 AI 與網路互動應用，<br>展現新世代對數學的嶄新詮釋與表達。
+      集結竹科實中與鳳山高中學生的創意成果，以雙語數學為主題，融合 AI 與網路互動應用，展現新世代對數學的嶄新詮釋與表達。
     </p>
     <div class="hero-actions">
       <a href="#groups" class="btn-fill">
@@ -880,10 +997,7 @@ footer{
   overflow:hidden;
 ">
   <!-- section label -->
-  <div style="
-    position:absolute;top:3rem;left:5rem;
-    z-index:10;
-  ">
+  <div class="film-section-label">
     <div style="display:flex;align-items:center;gap:10px;margin-bottom:.5rem;">
       <div style="width:22px;height:1px;background:var(--orange)"></div>
       <div style="font-family:var(--mono);font-size:10px;letter-spacing:.25em;text-transform:uppercase;color:var(--orange);">參展海報展示</div>
@@ -929,7 +1043,7 @@ footer{
 <section class="about" id="about">
   <div class="about-text" style="border-right:none;">
     <div class="section-kicker"><div class="kl"></div><div class="kt">展覽理念</div></div>
-    <h2 class="about-heading" style="font-style:italic;font-weight:600;white-space:nowrap;color:#FFE7D2;">Mathematics Speaks All Languages</h2>
+    <h2 class="about-heading" style="font-style:italic;font-weight:600;word-break:break-word;color:#FFE7D2;">Mathematics Speaks All Languages</h2>
     <p class="about-body" style="color:rgba(255,255,255,0.88);font-weight:400;">
       中文或英文，都是理解數學的方式；AI 則幫助我們以另一種的方式理解數學。
     </p>
@@ -1300,6 +1414,26 @@ groups.forEach((g, i) => {
   });
   rows.appendChild(row);
 });
+</script>
+
+<!-- ── HAMBURGER MENU ── -->
+<script>
+(function(){
+  const btn  = document.getElementById('navHamburger');
+  const menu = document.getElementById('mobileNav');
+  if(!btn || !menu) return;
+  function toggle(force){
+    const open = force !== undefined ? force : !btn.classList.contains('open');
+    btn.classList.toggle('open', open);
+    menu.classList.toggle('open', open);
+    btn.setAttribute('aria-expanded', String(open));
+  }
+  btn.addEventListener('click', e => { e.stopPropagation(); toggle(); });
+  menu.querySelectorAll('a').forEach(a => a.addEventListener('click', () => toggle(false)));
+  document.addEventListener('click', e => {
+    if(!btn.contains(e.target) && !menu.contains(e.target)) toggle(false);
+  });
+})();
 </script>
 
 <!-- ── MATH PARALLAX CANVAS ── -->
