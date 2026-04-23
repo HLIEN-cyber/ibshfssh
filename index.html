@@ -830,7 +830,7 @@ footer{
       集結竹科實中與鳳山高中學生的創意成果，以雙語數學為主題，融合 AI 與網路互動應用，<br>展現新世代對數學的嶄新詮釋與表達。
     </p>
     <div class="hero-actions">
-      <a href="#film-section" class="btn-fill">
+      <a href="#groups" class="btn-fill">
         瀏覽海報與應用
         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
       </a>
@@ -1251,7 +1251,6 @@ groups.forEach((g, i) => {
         ${(g.topicUrl || g.url)
           ? `<a href="${g.topicUrl || g.url}" class="ex-poster-topic topic-link" target="_blank" onclick="event.stopPropagation()">${g.topic}</a>`
           : `<div class="ex-poster-topic">${g.topic}</div>`}
-        <a href="${g.topicUrl || '#'}" class="work-link" target="_blank" onclick="event.stopPropagation()">開啟海報 →</a>
       </div>
     </div>
 
@@ -1259,9 +1258,6 @@ groups.forEach((g, i) => {
       <div class="work-block">
         <div class="app-label">Web App · 互動應用</div>
         <div class="app-name">${g.app}</div>
-        <a href="${g.url || '#'}" class="app-link" target="_blank" onclick="event.stopPropagation()">
-          開啟應用 →
-        </a>
       </div>
     </div>
   `;
