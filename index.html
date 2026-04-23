@@ -743,6 +743,78 @@ nav{
   color:var(--orange);text-decoration:none;
 }
 
+/* ── ACCORDION ── */
+.acc-item{border-bottom:1px solid var(--rule2);position:relative}
+.acc-item:first-child{border-top:1px solid var(--rule2)}
+.acc-header{
+  display:flex;align-items:center;gap:14px;
+  padding:1.2rem 0;cursor:pointer;
+  position:relative;transition:background .2s;
+}
+.acc-header::after{
+  content:'';position:absolute;bottom:0;left:0;
+  width:0;height:1px;background:var(--orange);
+  transition:width .45s cubic-bezier(.77,0,.175,1);
+}
+.acc-item.open .acc-header::after,
+.acc-header:hover::after{width:100%}
+.acc-header:hover,.acc-item.open .acc-header{background:rgba(193,213,185,0.28)}
+.acc-num{
+  font-family:var(--serif);font-size:22px;font-style:italic;font-weight:300;
+  color:#869580;letter-spacing:.02em;flex-shrink:0;width:32px;transition:color .25s;
+}
+.acc-header:hover .acc-num,.acc-item.open .acc-num{color:var(--orange)}
+.acc-thumb{
+  width:32px;height:44px;border-radius:3px;overflow:hidden;flex-shrink:0;
+  box-shadow:0 2px 8px rgba(26,31,24,0.18);background:#1a1a1a;transition:box-shadow .25s;
+}
+.acc-thumb img{width:100%;height:100%;object-fit:cover;display:block}
+.acc-header:hover .acc-thumb{box-shadow:0 4px 14px rgba(26,31,24,0.28)}
+.acc-info{flex:1;min-width:0}
+.acc-name{font-family:var(--serif);font-size:19px;font-weight:400;letter-spacing:.01em}
+.acc-name-en{font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink4)}
+.acc-topic{
+  font-family:var(--serif);font-size:16px;font-weight:300;color:var(--ink2);
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
+.acc-chevron{
+  flex-shrink:0;width:20px;height:20px;color:#869580;
+  transition:transform .35s ease,color .25s;
+}
+.acc-header:hover .acc-chevron,.acc-item.open .acc-chevron{color:var(--orange)}
+.acc-item.open .acc-chevron{transform:rotate(180deg)}
+.acc-body{max-height:0;overflow:hidden;transition:max-height .4s cubic-bezier(.4,0,.2,1)}
+.acc-item.open .acc-body{max-height:400px}
+.acc-content{display:flex;gap:2.5rem;padding:1.4rem 0 2rem 46px;align-items:flex-start}
+.acc-poster-wrap{width:110px;flex-shrink:0}
+.acc-poster-img{
+  width:100%;border-radius:6px;overflow:hidden;aspect-ratio:3/4;
+  background:#1a1a1a;box-shadow:0 4px 18px rgba(26,31,24,0.22);
+}
+.acc-poster-img img{width:100%;height:100%;object-fit:cover;display:block}
+.acc-links{display:flex;flex-direction:column;gap:1.6rem;flex:1;justify-content:center}
+.acc-link-label{
+  font-family:var(--mono);font-size:10px;letter-spacing:.16em;
+  text-transform:uppercase;color:var(--ink4);margin-bottom:4px;
+}
+.acc-link-title{
+  font-family:var(--serif);font-size:17px;font-weight:400;
+  color:var(--ink);margin-bottom:8px;
+}
+.acc-link-btn{
+  display:inline-flex;align-items:center;gap:6px;
+  font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--orange);text-decoration:none;
+  border:1px solid rgba(249,115,22,0.4);border-radius:3px;
+  padding:5px 11px;transition:background .2s,color .2s;
+}
+.acc-link-btn:hover{background:var(--orange);color:#fff}
+@media(max-width:960px){
+  .acc-content{flex-direction:column;gap:1.4rem;padding:1.2rem 0 1.6rem 46px}
+  .acc-poster-wrap{width:80px}
+  .acc-topic{display:none}
+}
+
 /* ── FOOTER ── */
 footer{
   background:var(--ink);color:var(--bg);
@@ -796,8 +868,7 @@ footer{
   .hero-left{padding:4rem 2rem}
   .about{grid-template-columns:1fr}
   .about-pull{border-top:1px solid var(--rule)}
-  .list-section{padding:3rem 2rem;overflow-x:auto}
-  .exhibit-col-heads,.group-row{min-width:880px}
+  .list-section{padding:3rem 2rem}
   footer{grid-template-columns:1fr;padding:3rem 2rem}
   .f-bottom{padding:1rem 2rem}
   .stack-stage{min-height:430px}
@@ -950,19 +1021,6 @@ footer{
   <div class="list-header">
     <h2 class="list-title">參展作品</h2>
     <div class="list-count">12 組 · 海報 + 互動應用 · 114學年度</div>
-  </div>
-
-  <!-- column headers -->
-  <div class="exhibit-col-heads">
-    <div class="ech-spacer"></div>
-    <div class="ech-label">
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
-      海報
-    </div>
-    <div class="ech-label">
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 3H5a2 2 0 00-2 2v4m6-6h10a2 2 0 012 2v4M9 3v18m0 0h10a2 2 0 002-2v-4M9 21H5a2 2 0 01-2-2v-4m0 0h18"/></svg>
-      網路互動應用
-    </div>
   </div>
 
   <div id="groupRows"></div>
@@ -1257,48 +1315,52 @@ const mq = document.getElementById('mqTrack');
   mq.appendChild(el);
 });
 
-/* ─── GROUP LIST — 海報 + 應用 並排 ─── */
+/* ─── GROUP LIST — 手風琴 ─── */
 const rows = document.getElementById('groupRows');
 groups.forEach((g, i) => {
-  const row = document.createElement('div');
-  row.className = 'group-row';
+  const posterLink = g.topicUrl || g.url;
+  const appLink = g.appUrl;
 
-  row.innerHTML = `
-    <div class="row-left">
-      <div class="rn">${String(i+1).padStart(2,'0')}</div>
-      <div class="row-poster-mini"><img src="${g.img}" alt="${g.name}"></div>
-      <div class="ri">
-        <div class="ri-name">${g.name} <span class="row-arrow">→</span></div>
-        <div class="ri-en">${g.en}</div>
+  const item = document.createElement('div');
+  item.className = 'acc-item';
+  item.innerHTML = `
+    <div class="acc-header">
+      <div class="acc-num">${String(i+1).padStart(2,'0')}</div>
+      <div class="acc-thumb"><img src="${g.img}" alt="${g.name}"></div>
+      <div class="acc-info">
+        <div class="acc-name">${g.name} <span class="acc-name-en">${g.en}</span></div>
+        <div class="acc-topic">${g.topic}</div>
       </div>
+      <svg class="acc-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 9l6 6 6-6"/></svg>
     </div>
-
-    <div class="exhibit-poster">
-      <div class="work-block">
-        <div class="ex-poster-label">Poster · 海報</div>
-        ${(g.topicUrl || g.url)
-          ? `<a href="${g.topicUrl || g.url}" class="ex-poster-topic topic-link" target="_blank" onclick="event.stopPropagation()">${g.topic}</a>`
-          : `<div class="ex-poster-topic">${g.topic}</div>`}
-      </div>
-    </div>
-
-    <div class="exhibit-app">
-      <div class="work-block">
-        <div class="app-label">Web App · 互動應用</div>
-        ${g.appUrl
-          ? `<a href="${g.appUrl}" class="app-name topic-link" target="_blank" onclick="event.stopPropagation()">${g.app}</a>`
-          : `<div class="app-name">${g.app}</div>`}
+    <div class="acc-body">
+      <div class="acc-content">
+        <div class="acc-poster-wrap">
+          <div class="acc-poster-img"><img src="${g.img}" alt="${g.name}"></div>
+        </div>
+        <div class="acc-links">
+          <div>
+            <div class="acc-link-label">Poster · 海報</div>
+            <div class="acc-link-title">${g.topic}</div>
+            ${posterLink ? `<a href="${posterLink}" class="acc-link-btn" target="_blank">觀看海報 →</a>` : ''}
+          </div>
+          <div>
+            <div class="acc-link-label">Web App · 互動應用</div>
+            <div class="acc-link-title">${g.app}</div>
+            ${appLink ? `<a href="${appLink}" class="acc-link-btn" target="_blank">開啟應用 →</a>` : ''}
+          </div>
+        </div>
       </div>
     </div>
   `;
 
-  row.addEventListener('click', () => {
-    const idx = order.indexOf(i);
-    if(idx > 0){ order.splice(idx,1); order.unshift(i); }
-    updateStack();
-    document.getElementById('film-section').scrollIntoView({ behavior: 'smooth' });
+  item.querySelector('.acc-header').addEventListener('click', () => {
+    const isOpen = item.classList.contains('open');
+    document.querySelectorAll('.acc-item.open').forEach(el => el.classList.remove('open'));
+    if (!isOpen) item.classList.add('open');
   });
-  rows.appendChild(row);
+
+  rows.appendChild(item);
 });
 </script>
 
