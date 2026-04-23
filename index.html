@@ -344,12 +344,12 @@ nav{
 .film-strip-scroll{
   position:absolute;
   left:0;top:50%;
-  transform:translateY(-50%);
+  transform:translateX(60px) translateY(-50%);
   display:flex;flex-direction:column;
   background:#111;
   border-top:3px solid #000;
   border-bottom:3px solid #000;
-  will-change:left;
+  will-change:transform;
   /* strip is 340px tall — big enough to feel cinematic */
   height:340px;
 }
@@ -470,33 +470,33 @@ nav{
   will-change:transform;transform-origin:center center;
 }
 .stack-card[data-pos="0"]{
-  transform:translateY(0) rotate(0deg) scale(1);z-index:10;
+  transform:translate3d(0,0,0) rotate(0deg) scale(1);z-index:10;
   box-shadow:0 24px 56px rgba(17,17,16,0.28),0 2px 8px rgba(17,17,16,0.12);
 }
 .stack-card[data-pos="1"]{
-  transform:translateX(-300px) translateY(6px) rotate(-8deg) scale(.82);z-index:8;
+  transform:translate3d(-300px,6px,0) rotate(-8deg) scale(.82);z-index:8;
   box-shadow:0 14px 30px rgba(17,17,16,0.14);
   opacity:.28;
   filter:saturate(.35) brightness(1.08);
 }
 .stack-card[data-pos="2"]{
-  transform:translateX(300px) translateY(6px) rotate(8deg) scale(.82);z-index:8;
+  transform:translate3d(300px,6px,0) rotate(8deg) scale(.82);z-index:8;
   box-shadow:0 14px 30px rgba(17,17,16,0.14);
   opacity:.28;
   filter:saturate(.35) brightness(1.08);
 }
 .stack-card[data-pos="3"]{
-  transform:translateX(-380px) translateY(12px) rotate(-10deg) scale(.72);z-index:7;opacity:0;
+  transform:translate3d(-380px,12px,0) rotate(-10deg) scale(.72);z-index:7;opacity:0;
 }
 .stack-card[data-pos="4"]{
-  transform:translateX(380px) translateY(12px) rotate(10deg) scale(.72);z-index:7;opacity:0;
+  transform:translate3d(380px,12px,0) rotate(10deg) scale(.72);z-index:7;opacity:0;
 }
 .stack-card[data-pos="hidden"]{
-  transform:translateY(-40px) scale(.78) rotate(-3deg);
+  transform:translate3d(0,-40px,0) scale(.78) rotate(-3deg);
   opacity:0;z-index:0;pointer-events:none;
 }
 .stack-card[data-pos="0"]:hover{
-  transform:translateY(-6px) scale(1.01);
+  transform:translate3d(0,-6px,0) scale(1.01);
   box-shadow:0 36px 72px rgba(17,17,16,0.24);
 }
 
@@ -1044,8 +1044,6 @@ const groups = [
   const totalW   = groups.length * (FRAME_W + FRAME_GAP) + 12;
   const travelX  = totalW - stageW + 80;
 
-  strip.style.left = '60px';
-
   /* use JS animation for precise control */
   const startTime = performance.now();
   let done = false;
@@ -1061,7 +1059,7 @@ const groups = [
     const raw      = Math.min(elapsed / SCROLL_MS, 1);
     const progress = ease(raw);
     const x        = 60 - progress * travelX;
-    strip.style.left = x + 'px';
+    strip.style.transform = 'translateX('+x+'px) translateY(-50%)';
 
     if(raw < 1){
       requestAnimationFrame(scrollFrame);
@@ -1080,7 +1078,7 @@ const groups = [
     setTimeout(() => {
       ringStage.style.display = 'none';
       stackWrap.classList.add('visible');
-      buildStack();
+      updateStack();
     }, 700);
   }
 })();
@@ -1088,30 +1086,24 @@ const groups = [
 /* ─── STACK CAROUSEL ─── */
 let order = groups.map((_,i)=>i);
 
-function buildStack(){
+/* Build all cards once — never destroy/recreate them */
+const stackCards = (function(){
   const c = document.getElementById('stackContainer');
-  c.innerHTML = '';
-
-  order.forEach((gi, pos) => {
-    const g = groups[gi];
+  return groups.map((g, gi) => {
     const card = document.createElement('div');
     card.className = 'stack-card';
-    card.dataset.pos = pos < 5 ? pos : 'hidden';
 
     const face = document.createElement('div');
     face.className = 'card-face';
 
     if(g.img){
-      /* ── 有海報圖 ── */
       const img = document.createElement('img');
       img.src = g.img; img.alt = g.name;
       img.style.cssText = 'width:100%;height:100%;object-fit:cover;display:block;';
       face.appendChild(img);
     } else {
-      /* ── 佔位 ── */
       face.style.cssText = `background:${g.bg};`;
 
-      /* large italic number watermark */
       const wm = document.createElement('div');
       wm.style.cssText = `
         position:absolute;inset:0;
@@ -1124,7 +1116,6 @@ function buildStack(){
       wm.textContent = String(gi+1).padStart(2,'0');
       face.appendChild(wm);
 
-      /* orange accent bar top */
       const bar_top = document.createElement('div');
       bar_top.style.cssText = `
         position:absolute;top:0;left:0;right:0;
@@ -1132,7 +1123,6 @@ function buildStack(){
       `;
       face.appendChild(bar_top);
 
-      /* centre placeholder content */
       const ph = document.createElement('div');
       ph.style.cssText = `
         position:relative;z-index:1;
@@ -1165,7 +1155,6 @@ function buildStack(){
       face.appendChild(ph);
     }
 
-    /* info bar */
     const bar = document.createElement('div');
     bar.className = 'card-bar';
     bar.innerHTML = `
@@ -1177,40 +1166,65 @@ function buildStack(){
     `;
     face.appendChild(bar);
     card.appendChild(face);
-
-    /* interactions on top card */
-    if(pos === 0){
-      card.addEventListener('click', () => advance(1));
-      let tx = 0;
-      card.addEventListener('touchstart', e => { tx = e.touches[0].clientX; });
-      card.addEventListener('touchend',   e => {
-        const dx = e.changedTouches[0].clientX - tx;
-        if(Math.abs(dx) > 40) advance(dx < 0 ? 1 : -1);
-      });
-      let mx = 0, dragging = false;
-      card.addEventListener('mousedown', e => { mx = e.clientX; dragging = true; });
-      document.addEventListener('mouseup', e => {
-        if(!dragging) return; dragging = false;
-        const dx = e.clientX - mx;
-        if(Math.abs(dx) > 55) advance(dx < 0 ? 1 : -1);
-      });
-    }
     c.appendChild(card);
+    return card;
   });
+})();
 
+/* Update data-pos on existing cards — no DOM rebuild */
+function updateStack(){
+  order.forEach((gi, pos) => {
+    stackCards[gi].dataset.pos = pos < 5 ? String(pos) : 'hidden';
+  });
   document.getElementById('stackCur').textContent   = String(order[0]+1).padStart(2,'0');
   document.getElementById('stackGroup').textContent = groups[order[0]].name;
 }
 
-function advance(dir = 1){
-  if(dir > 0){ const f = order.shift(); order.push(f); }
-  else        { const b = order.pop();  order.unshift(b); }
-  buildStack();
-}
+/* Register all interactions once on the container (event delegation) */
+(function(){
+  const c = document.getElementById('stackContainer');
+  let tx = 0, mx = 0, dragging = false;
+  let busy = false;
 
-document.getElementById('stackNext').addEventListener('click', () => advance(1));
-document.getElementById('stackPrev').addEventListener('click', () => advance(-1));
-buildStack();
+  function advance(dir){
+    if(busy) return;
+    busy = true;
+    if(dir > 0){ const f = order.shift(); order.push(f); }
+    else        { const b = order.pop();  order.unshift(b); }
+    updateStack();
+    setTimeout(() => { busy = false; }, 350);
+  }
+
+  c.addEventListener('click', e => {
+    const card = e.target.closest('.stack-card');
+    if(card && card.dataset.pos === '0') advance(1);
+  });
+  c.addEventListener('touchstart', e => {
+    const card = e.target.closest('.stack-card');
+    if(card && card.dataset.pos === '0') tx = e.touches[0].clientX;
+  }, {passive:true});
+  c.addEventListener('touchend', e => {
+    const card = e.target.closest('.stack-card');
+    if(card && card.dataset.pos === '0'){
+      const dx = e.changedTouches[0].clientX - tx;
+      if(Math.abs(dx) > 40) advance(dx < 0 ? 1 : -1);
+    }
+  });
+  c.addEventListener('mousedown', e => {
+    const card = e.target.closest('.stack-card');
+    if(card && card.dataset.pos === '0'){ mx = e.clientX; dragging = true; }
+  });
+  document.addEventListener('mouseup', e => {
+    if(!dragging) return; dragging = false;
+    const dx = e.clientX - mx;
+    if(Math.abs(dx) > 55) advance(dx < 0 ? 1 : -1);
+  });
+
+  document.getElementById('stackNext').addEventListener('click', () => advance(1));
+  document.getElementById('stackPrev').addEventListener('click', () => advance(-1));
+})();
+
+updateStack();
 
 /* ─── MARQUEE ─── */
 const mq = document.getElementById('mqTrack');
@@ -1275,7 +1289,7 @@ groups.forEach((g, i) => {
   row.addEventListener('click', () => {
     const idx = order.indexOf(i);
     if(idx > 0){ order.splice(idx,1); order.unshift(i); }
-    buildStack();
+    updateStack();
     window.scrollTo({ top: 0, behavior: 'smooth' });
   });
   rows.appendChild(row);
