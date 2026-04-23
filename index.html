@@ -1266,7 +1266,7 @@ groups.forEach((g, i) => {
     const idx = order.indexOf(i);
     if(idx > 0){ order.splice(idx,1); order.unshift(i); }
     updateStack();
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    document.getElementById('film-section').scrollIntoView({ behavior: 'smooth' });
   });
   rows.appendChild(row);
 });
