@@ -1263,8 +1263,8 @@ groups.forEach((g, i) => {
       <div class="ex-thumb" style="${thumbStyle}">${thumbInner}</div>
       <div>
         <div class="ex-poster-label">Poster · 海報</div>
-        ${g.topicUrl
-          ? `<a href="${g.topicUrl}" class="ex-poster-topic topic-link" target="_blank" onclick="event.stopPropagation()">${g.topic}</a>`
+        ${(g.topicUrl || g.url)
+          ? `<a href="${g.topicUrl || g.url}" class="ex-poster-topic topic-link" target="_blank" onclick="event.stopPropagation()">${g.topic}</a>`
           : `<div class="ex-poster-topic">${g.topic}</div>`}
 
       </div>
