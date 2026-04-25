@@ -168,7 +168,6 @@ nav{
   display:flex;align-items:center;justify-content:space-between;
   padding:0 4rem;height:58px;
   background:rgba(28,48,32,0.97);
-  backdrop-filter:blur(16px);
   border-bottom:1px solid rgba(249,115,22,0.3);
 }
 .nav-logo{
@@ -451,6 +450,7 @@ nav{
   display:flex;align-items:stretch;
   flex:1;padding:0 6px;gap:4px;
   background:#111;
+  filter:sepia(.15) contrast(1.1);
 }
 
 /* single frame — wider & taller */
@@ -470,7 +470,7 @@ nav{
 }
 .film-fr-inner img{
   position:absolute;inset:0;width:100%;height:100%;
-  object-fit:cover;opacity:.85;filter:sepia(.15) contrast(1.1);
+  object-fit:cover;opacity:.85;
 }
 .fr-num{
   font-family:var(--serif);font-size:38px;font-style:italic;font-weight:300;
