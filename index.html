@@ -1274,20 +1274,26 @@ const groups = [
   /* Apply start position immediately to avoid a flash of the CSS default */
   strip.style.transform = 'translateX('+startX+'px) translateY(-50%)';
 
-  /* Use Web Animations API — runs on the compositor thread, immune to JS jank */
-  const anim = strip.animate(
-    [
-      { transform: 'translateX('+startX+'px) translateY(-50%)' },
-      { transform: 'translateX('+endX+'px) translateY(-50%)' }
-    ],
-    { duration: SCROLL_MS, easing: 'linear', fill: 'forwards' }
-  );
+  function startAnim(){
+    /* Use Web Animations API — runs on the compositor thread, immune to JS jank */
+    const anim = strip.animate(
+      [
+        { transform: 'translateX('+startX+'px) translateY(-50%)' },
+        { transform: 'translateX('+endX+'px) translateY(-50%)' }
+      ],
+      { duration: SCROLL_MS, easing: 'linear', fill: 'forwards' }
+    );
+    anim.onfinish = () => {
+      strip.style.transform = 'translateX('+endX+'px) translateY(-50%)';
+      anim.cancel();
+      setTimeout(() => collapseFilm(), 600);
+    };
+  }
 
-  anim.onfinish = () => {
-    strip.style.transform = 'translateX('+endX+'px) translateY(-50%)';
-    anim.cancel();
-    setTimeout(() => collapseFilm(), 600);
-  };
+  /* Pre-decode every poster image before starting so the GPU already has
+     all textures ready — prevents mid-animation decode jank on the main thread. */
+  const imgs = Array.from(framesRow.querySelectorAll('img'));
+  Promise.all(imgs.map(img => img.decode().catch(() => {}))).then(startAnim);
 
   function collapseFilm(){
     /* fade out the strip */
