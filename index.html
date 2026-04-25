@@ -1274,30 +1274,20 @@ const groups = [
   /* Apply start position immediately to avoid a flash of the CSS default */
   strip.style.transform = 'translateX('+startX+'px) translateY(-50%)';
 
-  const startTime = performance.now();
-  let done = false;
+  /* Use Web Animations API — runs on the compositor thread, immune to JS jank */
+  const anim = strip.animate(
+    [
+      { transform: 'translateX('+startX+'px) translateY(-50%)' },
+      { transform: 'translateX('+endX+'px) translateY(-50%)' }
+    ],
+    { duration: SCROLL_MS, easing: 'linear', fill: 'forwards' }
+  );
 
-  function ease(t){
-    return t < 0.5 ? 4*t*t*t : 1 - Math.pow(-2*t+2,3)/2;
-  }
-
-  function scrollFrame(now){
-    if(done) return;
-    const elapsed  = now - startTime;
-    const raw      = Math.min(elapsed / SCROLL_MS, 1);
-    const progress = ease(raw);
-    const x        = startX + progress * (endX - startX);  /* moves right → */
-    strip.style.transform = 'translateX('+x+'px) translateY(-50%)';
-
-    if(raw < 1){
-      requestAnimationFrame(scrollFrame);
-    } else {
-      done = true;
-      /* pause 0.6s then fade out & show stack */
-      setTimeout(() => collapseFilm(), 600);
-    }
-  }
-  requestAnimationFrame(scrollFrame);
+  anim.onfinish = () => {
+    strip.style.transform = 'translateX('+endX+'px) translateY(-50%)';
+    anim.cancel();
+    setTimeout(() => collapseFilm(), 600);
+  };
 
   function collapseFilm(){
     /* fade out the strip */
