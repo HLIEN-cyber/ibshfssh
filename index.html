@@ -767,7 +767,7 @@ nav{
 .group-row{
   display:grid;grid-template-columns:240px minmax(260px,1fr) minmax(260px,1fr);
   align-items:center;gap:1rem;
-  padding:1.3rem 0;
+  padding:0.75rem 0;
   border-bottom:1px solid var(--rule2);
   cursor:pointer;position:relative;overflow:visible;transition:background .2s;
 }
@@ -783,7 +783,7 @@ nav{
 /* left col */
 .row-left{display:flex;align-items:center;gap:12px;min-width:0}
 .row-poster-mini{
-  width:36px;height:50px;border-radius:3px;overflow:hidden;flex-shrink:0;
+  width:30px;height:42px;border-radius:3px;overflow:hidden;flex-shrink:0;
   box-shadow:0 2px 8px rgba(26,31,24,0.18);transition:box-shadow .25s;
   background:#1a1a1a;
 }
@@ -1536,7 +1536,6 @@ groups.forEach((g, i) => {
       <div class="row-poster-mini"><img src="${g.img}" alt="${g.name}"></div>
       <div class="ri">
         <div class="ri-name">${g.name} <span class="row-arrow">→</span></div>
-        <div class="ri-en">${g.en}</div>
       </div>
     </div>
 
