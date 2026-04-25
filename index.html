@@ -781,9 +781,10 @@ nav{
 .group-row:hover{background:rgba(193,213,185,0.36)}
 
 /* left col */
-.row-left{display:flex;align-items:center;gap:12px;min-width:0}
+.row-left{display:flex;align-items:flex-start;gap:12px;min-width:0}
+.ri{min-width:0}
 .row-poster-mini{
-  width:30px;height:42px;border-radius:3px;overflow:hidden;flex-shrink:0;
+  width:30px;height:42px;border-radius:3px;overflow:hidden;flex-shrink:0;margin-top:1px;
   box-shadow:0 2px 8px rgba(26,31,24,0.18);transition:box-shadow .25s;
   background:#1a1a1a;
 }
@@ -792,6 +793,7 @@ nav{
 .rn{
   font-family:var(--serif);font-size:22px;font-style:italic;font-weight:300;
   color:#869580;letter-spacing:.02em;transition:color .25s;flex-shrink:0;
+  padding-top:3px;
 }
 .group-row:hover .rn{color:var(--orange)}
 .ri-name{font-family:var(--serif);font-size:20px;font-weight:400;letter-spacing:.01em;margin-bottom:3px}
