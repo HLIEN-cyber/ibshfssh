@@ -1568,6 +1568,26 @@ groups.forEach((g, i) => {
   });
   (i < 6 ? rowsLeft : rowsRight).appendChild(row);
 });
+
+/* Equalize heights of paired rows (group 1↔7, 2↔8, …) */
+function equalizeGroupRows(){
+  const left  = Array.from(rowsLeft.children);
+  const right = Array.from(rowsRight.children);
+  left.forEach(r => r.style.minHeight = '');
+  right.forEach(r => r.style.minHeight = '');
+  const n = Math.min(left.length, right.length);
+  for(let i = 0; i < n; i++){
+    const h = Math.max(left[i].offsetHeight, right[i].offsetHeight);
+    left[i].style.minHeight  = h + 'px';
+    right[i].style.minHeight = h + 'px';
+  }
+}
+requestAnimationFrame(() => requestAnimationFrame(equalizeGroupRows));
+let _eqTimer;
+window.addEventListener('resize', () => {
+  clearTimeout(_eqTimer);
+  _eqTimer = setTimeout(equalizeGroupRows, 120);
+});
 </script>
 
 <!-- ── HAMBURGER MENU ── -->
