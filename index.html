@@ -450,7 +450,6 @@ nav{
   display:flex;align-items:stretch;
   flex:1;padding:0 6px;gap:4px;
   background:#111;
-  filter:sepia(.15) contrast(1.1);
 }
 
 /* single frame — wider & taller */
@@ -538,22 +537,24 @@ nav{
   transition:transform .7s cubic-bezier(.22,1,.36,1),
              opacity .6s ease,box-shadow .5s ease;
   will-change:transform;transform-origin:center center;
+  /* All cards carry the dim filter from birth so the browser never creates
+     a new compositing sub-layer mid-animation when a card enters pos 1/2. */
+  filter:saturate(.35) brightness(1.08);
 }
 .stack-card[data-pos="0"]{
   transform:translate3d(0,0,0) rotate(0deg) scale(1);z-index:10;
   box-shadow:0 24px 56px rgba(17,17,16,0.28),0 2px 8px rgba(17,17,16,0.12);
+  filter:none;
 }
 .stack-card[data-pos="1"]{
   transform:translate3d(-300px,6px,0) rotate(-8deg) scale(.82);z-index:8;
   box-shadow:0 14px 30px rgba(17,17,16,0.14);
   opacity:.28;
-  filter:saturate(.35) brightness(1.08);
 }
 .stack-card[data-pos="2"]{
   transform:translate3d(300px,6px,0) rotate(8deg) scale(.82);z-index:8;
   box-shadow:0 14px 30px rgba(17,17,16,0.14);
   opacity:.28;
-  filter:saturate(.35) brightness(1.08);
 }
 .stack-card[data-pos="3"]{
   transform:translate3d(-380px,12px,0) rotate(-10deg) scale(.72);z-index:7;opacity:0;
@@ -1346,9 +1347,12 @@ const groups = [
   Promise.all(imgs.map(img => img.decode().catch(() => {}))).then(startAnim);
 
   function collapseFilm(){
-    /* fade out the strip */
     strip.style.transition = 'opacity .6s ease';
     strip.style.opacity = '0';
+    /* Pre-decode stack card images during the 700ms fade so the GPU has all
+       textures uploaded before any card becomes interactive. */
+    const stackImgs = Array.from(document.querySelectorAll('.stack-card img'));
+    Promise.all(stackImgs.map(img => img.decode().catch(() => {})));
     setTimeout(() => {
       ringStage.style.display = 'none';
       stackWrap.classList.add('visible');
