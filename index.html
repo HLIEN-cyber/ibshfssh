@@ -351,7 +351,7 @@ nav{
 .film-strip-scroll{
   position:absolute;
   left:0;top:50%;
-  transform:translateX(60px) translateY(-50%);
+  transform:translateX(-1300px) translateY(-50%);
   display:flex;flex-direction:column;
   background:#111;
   border-top:3px solid #000;
@@ -1219,11 +1219,11 @@ const groups = [
   const sprTop      = document.getElementById('sprTop');
   const sprBot      = document.getElementById('sprBot');
 
-  const FRAME_W     = 120;
-  const FRAME_GAP   = 3;
+  const FRAME_W     = 170;  /* match CSS .film-fr width */
+  const FRAME_GAP   = 4;    /* match CSS .film-frames-row gap */
   const HOLE_W      = 14;
   const HOLE_GAP    = 3;
-  const SCROLL_MS   = 9000;
+  const SCROLL_MS   = 6000; /* faster */
 
   /* ── build sprocket holes ── */
   const TOTAL_HOLES = groups.length * 2 + 8;
@@ -1260,16 +1260,24 @@ const groups = [
   });
 
   /* ── measure total strip width & animate ── */
-  const stageW   = ringStage.offsetWidth || 500;
+  const stageW   = ringStage.offsetWidth || 900;
   const totalW   = groups.length * (FRAME_W + FRAME_GAP) + 12;
-  const travelX  = totalW - stageW + 80;
+  const travelX  = Math.max(totalW - stageW + 80, 200);
 
-  /* use JS animation for precise control */
+  /* Reversed animation: strip starts showing the last frames (frame 1 is off-screen
+     to the left). The strip scrolls RIGHT so frame 1 (Betty's Group, the leftmost)
+     enters from the left edge and travels all the way to the right edge before
+     the stack carousel appears. */
+  const startX = 60 - travelX;           /* begin: last frames visible on the left  */
+  const endX   = stageW - FRAME_W - 20;  /* end:   frame 1 near right edge of stage */
+
+  /* Apply start position immediately to avoid a flash of the CSS default */
+  strip.style.transform = 'translateX('+startX+'px) translateY(-50%)';
+
   const startTime = performance.now();
   let done = false;
 
   function ease(t){
-    /* ease-in-out cubic */
     return t < 0.5 ? 4*t*t*t : 1 - Math.pow(-2*t+2,3)/2;
   }
 
@@ -1278,7 +1286,7 @@ const groups = [
     const elapsed  = now - startTime;
     const raw      = Math.min(elapsed / SCROLL_MS, 1);
     const progress = ease(raw);
-    const x        = 60 - progress * travelX;
+    const x        = startX + progress * (endX - startX);  /* moves right → */
     strip.style.transform = 'translateX('+x+'px) translateY(-50%)';
 
     if(raw < 1){
