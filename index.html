@@ -1327,7 +1327,9 @@ const groups = [
   const startTime = performance.now();
   let done = false;
 
-  function ease(t){ return t; } /* linear — constant speed throughout */
+  function ease(t){
+    return t < 0.5 ? 4*t*t*t : 1 - Math.pow(-2*t+2,3)/2;
+  }
 
   function scrollFrame(now){
     if(done) return;
