@@ -1223,7 +1223,7 @@ const groups = [
   const FRAME_GAP   = 4;    /* match CSS .film-frames-row gap */
   const HOLE_W      = 14;
   const HOLE_GAP    = 3;
-  const SCROLL_MS   = 6000; /* faster */
+  const SCROLL_MS   = 9000; /* original speed */
 
   /* ── build sprocket holes ── */
   const TOTAL_HOLES = groups.length * 2 + 8;
@@ -1277,9 +1277,7 @@ const groups = [
   const startTime = performance.now();
   let done = false;
 
-  function ease(t){
-    return t < 0.5 ? 4*t*t*t : 1 - Math.pow(-2*t+2,3)/2;
-  }
+  function ease(t){ return t; } /* linear — constant speed throughout */
 
   function scrollFrame(now){
     if(done) return;
