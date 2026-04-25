@@ -559,17 +559,19 @@ nav{
 .marquee-wrap{
   overflow:hidden;
   border-top:1px solid var(--rule);border-bottom:1px solid var(--rule);
-  background:#F5F0E8;padding:11px 0;
+  background:rgba(220,227,214,0.78);padding:11px 0;
   position:relative;z-index:1;
 }
 .marquee-track{display:flex;white-space:nowrap;animation:mq 30s linear infinite}
+.marquee-track-ltr{display:flex;white-space:nowrap;animation:mq-ltr 50s linear infinite}
 .mq-item{
   display:inline-flex;align-items:center;gap:1rem;padding:0 2rem;
   font-family:var(--mono);font-size:11px;letter-spacing:0.18em;text-transform:uppercase;
-  color:#E05E05;
+  color:var(--orange);
 }
-.mq-sep{color:#E05E05}
+.mq-sep{color:var(--orange)}
 @keyframes mq{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+@keyframes mq-ltr{from{transform:translateX(-50%)}to{transform:translateX(0)}}
 
 /* ── ABOUT ── */
 .about{display:grid;grid-template-columns:1fr;border-top:1px solid var(--rule);position:relative;z-index:1;background:url('stage2-bg.png') center center/cover no-repeat;}
@@ -1061,6 +1063,10 @@ footer{
   </div>
 </section>
 
+<div class="marquee-wrap">
+  <div class="marquee-track-ltr" id="mqTrack2"></div>
+</div>
+
 <!-- ABOUT -->
 <section class="about" id="about">
   <div class="about-text" style="border-right:none;">
@@ -1413,6 +1419,14 @@ const mq = document.getElementById('mqTrack');
   el.className = 'mq-item';
   el.innerHTML = `${g.name} <span class="mq-sep">·</span>`;
   mq.appendChild(el);
+});
+
+const mq2 = document.getElementById('mqTrack2');
+[...groups, ...groups].forEach(g => {
+  const el = document.createElement('span');
+  el.className = 'mq-item';
+  el.innerHTML = `${g.topic} <span class="mq-sep">—</span>`;
+  mq2.appendChild(el);
 });
 
 /* ─── GROUP LIST — 海報 + 應用 並排 (6×2) ─── */
