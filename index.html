@@ -286,7 +286,7 @@ nav{
   background:url('stage-bg.png') center center / cover no-repeat;
   z-index:0;
   transform:scale(1.08);
-  animation:heroBgZoom 8s cubic-bezier(.2,.7,.2,1) forwards;
+  animation:heroBgZoom 11s cubic-bezier(.2,.7,.2,1) forwards;
 }
 
 /* dark gradient overlay so text is readable */
@@ -308,7 +308,7 @@ nav{
   inset:-30%;
   background:radial-gradient(circle at 22% 34%, rgba(249,115,22,.24) 0%, rgba(249,115,22,0) 46%);
   opacity:0;
-  animation:heroGlow 4.6s ease-out .5s forwards;
+  animation:heroGlow 6.4s ease-out .7s forwards;
 }
 
 /* ── HERO LEFT — text over image ── */
@@ -322,17 +322,17 @@ nav{
 .hero-anim-item{
   opacity:0;
   transform:translateY(28px);
-  transition:opacity .8s ease, transform .8s cubic-bezier(.22,.61,.36,1);
+  transition:opacity 1.15s ease, transform 1.15s cubic-bezier(.22,.61,.36,1);
 }
 body.hero-ready .hero-anim-item{
   opacity:1;
   transform:translateY(0);
 }
-.hero-kicker{transition-delay:.08s}
-.hero-title{transition-delay:.2s}
-.hero-sub{transition-delay:.32s}
-.hero-actions{transition-delay:.44s}
-.hero-foot{transition-delay:.56s}
+.hero-kicker{transition-delay:.14s}
+.hero-title{transition-delay:.34s}
+.hero-sub{transition-delay:.54s}
+.hero-actions{transition-delay:.74s}
+.hero-foot{transition-delay:.94s}
 .hero-kicker{
   display:flex;align-items:center;gap:12px;margin-bottom:2rem;
 }
