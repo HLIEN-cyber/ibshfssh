@@ -285,6 +285,8 @@ nav{
   position:absolute;inset:0;
   background:url('stage-bg.png') center center / cover no-repeat;
   z-index:0;
+  transform:scale(1.08);
+  animation:heroBgZoom 8s cubic-bezier(.2,.7,.2,1) forwards;
 }
 
 /* dark gradient overlay so text is readable */
@@ -300,6 +302,15 @@ nav{
   );
 }
 
+.hero-bg::before{
+  content:'';
+  position:absolute;
+  inset:-30%;
+  background:radial-gradient(circle at 22% 34%, rgba(249,115,22,.24) 0%, rgba(249,115,22,0) 46%);
+  opacity:0;
+  animation:heroGlow 4.6s ease-out .5s forwards;
+}
+
 /* ── HERO LEFT — text over image ── */
 .hero-left{
   position:relative;z-index:2;
@@ -308,6 +319,20 @@ nav{
   max-width:1000px;
   width:100%;
 }
+.hero-anim-item{
+  opacity:0;
+  transform:translateY(28px);
+  transition:opacity .8s ease, transform .8s cubic-bezier(.22,.61,.36,1);
+}
+body.hero-ready .hero-anim-item{
+  opacity:1;
+  transform:translateY(0);
+}
+.hero-kicker{transition-delay:.08s}
+.hero-title{transition-delay:.2s}
+.hero-sub{transition-delay:.32s}
+.hero-actions{transition-delay:.44s}
+.hero-foot{transition-delay:.56s}
 .hero-kicker{
   display:flex;align-items:center;gap:12px;margin-bottom:2rem;
 }
@@ -376,6 +401,28 @@ nav{
   font-family:var(--mono);font-size:11px;font-weight:400;
   letter-spacing:0.2em;text-transform:uppercase;
   color:rgba(245,240,232,0.45);margin-top:5px;
+}
+
+@keyframes heroBgZoom{
+  from{transform:scale(1.08);}
+  to{transform:scale(1);}
+}
+@keyframes heroGlow{
+  0%{opacity:0;transform:translateX(-20px)}
+  35%{opacity:.7}
+  100%{opacity:.34;transform:translateX(0)}
+}
+@media (prefers-reduced-motion: reduce){
+  .hero-bg,
+  .hero-bg::before{
+    animation:none;
+    transform:none;
+  }
+  .hero-anim-item{
+    opacity:1;
+    transform:none;
+    transition:none;
+  }
 }
 
 /* ── HERO RIGHT — FILM → STACK ── */
@@ -1050,24 +1097,24 @@ footer{
 <section class="hero" id="hero">
   <div class="hero-bg"></div>
   <div class="hero-left">
-    <div class="hero-kicker">
+    <div class="hero-kicker hero-anim-item">
       <div class="kicker-line"></div>
       <div class="kicker-text">114學年度聯合展</div>
     </div>
-    <h1 class="hero-title">
+    <h1 class="hero-title hero-anim-item">
       跨校遠距雙語數學課：<br>海報設計與網路互動應用專題
     </h1>
-    <p class="hero-sub">
+    <p class="hero-sub hero-anim-item">
       集結竹科實中與鳳山高中學生的創意成果，以雙語數學為主題，<br class="hero-sub-br">融合 AI 與網路互動應用，展現新世代對數學的嶄新詮釋與表達。
     </p>
-    <div class="hero-actions">
+    <div class="hero-actions hero-anim-item">
       <a href="#groups" class="btn-fill">
         瀏覽海報與應用
         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
       </a>
       <a href="#about" class="btn-outline">了解更多</a>
     </div>
-    <div class="hero-foot">
+    <div class="hero-foot hero-anim-item">
       <div>
         <div class="hf-num">12</div>
         <div class="hf-label">組海報</div>
@@ -1274,6 +1321,10 @@ const groups = [
   ...group,
   img: posterImages[index] ?? group.img
 }));
+
+window.addEventListener('load', () => {
+  requestAnimationFrame(() => document.body.classList.add('hero-ready'));
+});
 
 /* ─── FILM STRIP → STACK ANIMATION ─── */
 (function(){
