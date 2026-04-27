@@ -425,6 +425,11 @@ body.hero-ready .hero-anim-item{
   }
 }
 
+/* reset helper: allow hero intro to replay when returning home */
+body.hero-replay .hero-bg,
+body.hero-replay .hero-bg::before{
+  animation:none!important;
+}
 /* ── HERO RIGHT — FILM → STACK ── */
 .hero-right{
   background:rgba(120,150,115,0.35);border-left:1px solid var(--rule);
@@ -1322,8 +1327,21 @@ const groups = [
   img: posterImages[index] ?? group.img
 }));
 
-window.addEventListener('load', () => {
-  requestAnimationFrame(() => document.body.classList.add('hero-ready'));
+function playHeroIntroAnimation(){
+  const body = document.body;
+  body.classList.remove('hero-ready');
+  body.classList.add('hero-replay');
+  void body.offsetWidth;
+  body.classList.remove('hero-replay');
+  requestAnimationFrame(() => body.classList.add('hero-ready'));
+}
+
+window.addEventListener('load', playHeroIntroAnimation);
+
+document.querySelectorAll('a[href="#hero"]').forEach(link => {
+  link.addEventListener('click', () => {
+    setTimeout(playHeroIntroAnimation, 420);
+  });
 });
 
 /* ─── FILM STRIP → STACK ANIMATION ─── */
