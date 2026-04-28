@@ -455,6 +455,7 @@ body.hero-replay .hero-bg::before{
   inset:0;
   overflow:hidden;
   display:flex;align-items:center;
+  contain:layout paint;
 }
 .ring-stage::before,.ring-stage::after{
   content:'';
@@ -472,8 +473,7 @@ body.hero-replay .hero-bg::before{
   background:#111;
   border-top:3px solid #000;
   border-bottom:3px solid #000;
-  will-change:transform;
-  /* strip is 340px tall — big enough to feel cinematic */
+  /* will-change set in JS after images decoded to avoid premature GPU layer */
   height:340px;
 }
 
@@ -489,9 +489,8 @@ body.hero-replay .hero-bg::before{
 .spr-band.bot{border-top:2px solid #000;}
 .spr-hole{
   width:18px;height:13px;
-  background:#000;border-radius:3px;
-  border:1px solid #333;flex-shrink:0;
-  box-shadow:inset 0 0 4px rgba(0,0,0,.9);
+  background:#0a0a0a;border-radius:3px;
+  border:1px solid #2a2a2a;flex-shrink:0;
 }
 .spr-edge-num{
   position:absolute;right:4px;top:50%;transform:translateY(-50%);
@@ -1404,6 +1403,9 @@ document.querySelectorAll('a[href="#hero"]').forEach(link => {
   strip.style.transform = 'translateX('+startX+'px) translateY(-50%)';
 
   function startAnim(){
+    /* Promote to GPU layer now — after images are decoded so the texture
+       is fully baked before the first compositor frame, avoiding mid-anim re-upload. */
+    strip.style.willChange = 'transform';
     /* Use Web Animations API — runs on the compositor thread, immune to JS jank */
     const anim = strip.animate(
       [
@@ -1413,6 +1415,7 @@ document.querySelectorAll('a[href="#hero"]').forEach(link => {
       { duration: SCROLL_MS, easing: 'linear', fill: 'forwards' }
     );
     anim.onfinish = () => {
+      strip.style.willChange = 'auto';
       strip.style.transform = 'translateX('+endX+'px) translateY(-50%)';
       anim.cancel();
       setTimeout(() => collapseFilm(), 600);
