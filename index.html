@@ -852,6 +852,7 @@ body.hero-replay .hero-bg::before{
 .ri-name{font-family:var(--serif);font-size:13px;font-weight:400;letter-spacing:.01em;margin-bottom:3px;overflow:hidden;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2}
 .ri-name>span{display:inline}
 .ri-name>span+span::before{content:'、'}
+.ri-name--en{font-size:16px}
 .ri-en{font-family:var(--mono);font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:var(--ink4)}
 
 /* poster cell */
@@ -1637,7 +1638,7 @@ groups.forEach((g, i) => {
       <div class="rn">${String(i+1).padStart(2,'0')}</div>
       <div class="row-poster-mini"><img src="${g.img}" alt="${g.name}"></div>
       <div class="ri">
-        <div class="ri-name">${_nameItems}</div>
+        <div class="ri-name${g.name.includes('、') ? '' : ' ri-name--en'}">${_nameItems}</div>
       </div>
     </div>
 
