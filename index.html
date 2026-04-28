@@ -852,7 +852,7 @@ body.hero-replay .hero-bg::before{
 .ri-name{font-family:var(--serif);font-size:13px;font-weight:400;letter-spacing:.01em;margin-bottom:3px;overflow:hidden;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2}
 .ri-name>span{display:inline}
 .ri-name>span+span::before{content:'、'}
-.ri-name--en{font-size:16px}
+.ri-name--en{font-size:19px}
 .ri-en{font-family:var(--mono);font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:var(--ink4)}
 
 /* poster cell */
@@ -1627,11 +1627,12 @@ groups.forEach((g, i) => {
   row.className = 'group-row';
 
   const _ns = g.name.split('、').slice(0, 6);
-  const _nameItems = _ns.map((n, j) =>
-    j === _ns.length - 1
-      ? `<span>${n} <span class="row-arrow">→</span></span>`
-      : `<span>${n}</span>`
-  ).join('');
+  const _nameItems = _ns.map((n, j) => {
+    const dn = (i === 7 || i === 8) ? n.replace(' and ', '<br>and ') : n;
+    return j === _ns.length - 1
+      ? `<span>${dn} <span class="row-arrow">→</span></span>`
+      : `<span>${dn}</span>`;
+  }).join('');
 
   row.innerHTML = `
     <div class="row-left">
