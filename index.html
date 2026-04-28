@@ -508,7 +508,7 @@ body.hero-replay .hero-bg::before{
 
 /* single frame — wider & taller */
 .film-fr{
-  width:200px;flex-shrink:0;
+  width:220px;flex-shrink:0;
   position:relative;
   background:#0a0a0a;
   border-left:2px solid #2c2c2c;
@@ -583,7 +583,7 @@ body.hero-replay .hero-bg::before{
 }
 
 .stack-container{
-  position:relative;width:420px;height:520px;perspective:1200px;
+  position:relative;width:480px;height:520px;perspective:1200px;
 }
 .stack-card{
   position:absolute;width:100%;height:100%;
@@ -638,7 +638,7 @@ body.hero-replay .hero-bg::before{
   display:flex;align-items:flex-end;justify-content:space-between;
 }
 .card-name{
-  font-family:var(--serif);font-size:13px;font-weight:400;color:#FAFAF8;line-height:1.2;
+  font-family:var(--serif);font-size:11px;font-weight:400;color:#FAFAF8;line-height:1.5;
 }
 .card-name em{
   display:block;font-family:var(--mono);font-style:normal;
@@ -997,7 +997,7 @@ footer{
   .f-bottom{padding:1rem 2rem}
   .stack-stage{min-height:430px}
   .curator-grid{grid-template-columns:1fr!important}
-  .stack-container{width:320px;height:390px}
+  .stack-container{width:360px;height:390px}
   .stack-card[data-pos="1"]{transform:translateX(-165px) translateY(8px) rotate(-7deg) scale(.78)}
   .stack-card[data-pos="2"]{transform:translateX(165px) translateY(8px) rotate(7deg) scale(.78)}
   #stackPrev{left:8px}
@@ -1021,7 +1021,7 @@ footer{
   .ps-num{font-size:36px}
   .group-intro{flex-direction:column;}
   .group-quote{flex:0 0 auto;width:100%;}
-  .stack-container{width:280px;height:340px}
+  .stack-container{width:320px;height:340px}
   .stack-stage{min-height:380px}
   .stack-card[data-pos="1"]{transform:translateX(-140px) translateY(8px) rotate(-7deg) scale(.76)}
   .stack-card[data-pos="2"]{transform:translateX(140px) translateY(8px) rotate(7deg) scale(.76)}
@@ -1056,7 +1056,7 @@ footer{
   .group-row{grid-template-columns:1fr!important;min-width:0!important;gap:.6rem;padding:.9rem 0}
   .exhibit-poster,.exhibit-app{padding-left:0}
   .ex-poster-topic,.app-name{white-space:normal!important}
-  .stack-container{width:230px;height:280px}
+  .stack-container{width:260px;height:280px}
   .stack-stage{min-height:320px}
   .stack-card[data-pos="1"]{transform:translateX(-108px) translateY(6px) rotate(-6deg) scale(.73);opacity:.18}
   .stack-card[data-pos="2"]{transform:translateX(108px) translateY(6px) rotate(6deg) scale(.73);opacity:.18}
@@ -1354,7 +1354,7 @@ document.querySelectorAll('a[href="#hero"]').forEach(link => {
   const sprTop      = document.getElementById('sprTop');
   const sprBot      = document.getElementById('sprBot');
 
-  const FRAME_W     = 200;  /* match CSS .film-fr width */
+  const FRAME_W     = 220;  /* match CSS .film-fr width */
   const FRAME_GAP   = 4;    /* match CSS .film-frames-row gap */
   const HOLE_W      = 14;
   const HOLE_GAP    = 3;
@@ -1387,7 +1387,7 @@ document.querySelectorAll('a[href="#hero"]').forEach(link => {
         ${imgContent}
         <div class="fr-num">${String(i+1).padStart(2,'0')}</div>
         <div class="fr-sep"></div>
-        <div class="fr-name">${g.name}<br><span style="font-family:var(--mono);font-size:7px;letter-spacing:.1em;text-transform:uppercase;color:rgba(249,115,22,.55);">${g.topic}</span></div>
+        <div class="fr-name">${splitName(g.name)}<br><span style="font-family:var(--mono);font-size:7px;letter-spacing:.1em;text-transform:uppercase;color:rgba(249,115,22,.55);">${g.topic}</span></div>
         <div class="fr-dx"></div>
       </div>
     `;
@@ -1444,6 +1444,14 @@ document.querySelectorAll('a[href="#hero"]').forEach(link => {
     }, 700);
   }
 })();
+
+/* Split a 、-separated name into two roughly equal lines for display */
+function splitName(name) {
+  const parts = name.split('、');
+  if (parts.length < 2) return name;
+  const mid = Math.ceil(parts.length / 2);
+  return parts.slice(0, mid).join('、') + '<br>' + parts.slice(mid).join('、');
+}
 
 /* ─── STACK CAROUSEL ─── */
 let order = groups.map((_,i)=>i);
@@ -1522,7 +1530,7 @@ const stackCards = (function(){
     bar.innerHTML = `
       <div class="card-name">
         <em>${g.en} · ${g.topic}</em>
-        ${g.name}
+        ${splitName(g.name)}
       </div>
       <div class="card-num-big">${String(gi+1).padStart(2,'0')}</div>
     `;
