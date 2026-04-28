@@ -588,8 +588,8 @@ body.hero-replay .hero-bg::before{
   position:absolute;width:100%;height:100%;
   border-radius:14px;overflow:hidden;cursor:pointer;
   transition:transform .7s cubic-bezier(.22,1,.36,1),
-             opacity .6s ease,box-shadow .5s ease;
-  will-change:transform;transform-origin:center center;
+             opacity .6s ease,box-shadow .5s ease,filter .6s ease;
+  will-change:transform,filter;transform-origin:center center;
   /* All cards carry the dim filter from birth so the browser never creates
      a new compositing sub-layer mid-animation when a card enters pos 1/2. */
   filter:saturate(.35) brightness(1.08);
@@ -1541,7 +1541,7 @@ function updateStack(){
     if(dir > 0){ const f = order.shift(); order.push(f); }
     else        { const b = order.pop();  order.unshift(b); }
     updateStack();
-    setTimeout(() => { busy = false; }, 350);
+    setTimeout(() => { busy = false; }, 700);
   }
 
   c.addEventListener('click', e => {
