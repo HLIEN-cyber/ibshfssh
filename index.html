@@ -1307,7 +1307,7 @@ footer{
    填入後佔位版面自動消失，直接顯示海報圖
    bg 為尚未提供圖片時的卡片底色
 ──────────────────────────────────────────────────────────────── */
-const posterImages = Array.from({length: 12}, (_, i) => `${String(i + 1).padStart(2, '0')}.webp`);
+const posterImages = ['01.png', ...Array.from({length: 11}, (_, i) => `${String(i + 2).padStart(2, '0')}.webp`)];
 
 const groups = [
   {name:"Alice's Group",    en:'Group A',  topic:'Probability and Expected Value in Lottery Games', app:'彩券遊戲中的機率與期望值', topicUrl:'https://canva.link/tqpme0zose5lks9', appUrl:'https://gemini.google.com/share/aab447f4fcab?hl=zh-TW', url:'', img:'', bg:'#1C1814'},
