@@ -630,25 +630,7 @@ body.hero-replay .hero-bg::before{
   display:flex;flex-direction:column;align-items:center;justify-content:center;
   position:relative;
 }
-.card-bar{
-  position:absolute;bottom:0;left:0;right:0;
-  padding:.9rem 1.1rem .8rem;
-  background:rgba(17,17,16,0.78);
-  backdrop-filter:blur(6px);
-  display:flex;align-items:flex-end;justify-content:space-between;
-}
-.card-name{
-  font-family:var(--serif);font-size:18px;font-weight:400;color:#FAFAF8;line-height:1.1;word-break:keep-all;
-}
-.card-name em{
-  display:block;font-family:var(--mono);font-style:normal;
-  font-size:9px;letter-spacing:0.18em;text-transform:uppercase;
-  color:rgba(250,250,248,0.4);margin-bottom:3px;
-}
-.card-num-big{
-  font-family:var(--serif);font-size:32px;font-weight:300;font-style:italic;
-  color:rgba(250,250,248,0.22);line-height:1;
-}
+
 
 .snav-btn{
   width:64px;height:64px;border-radius:50%;
@@ -1008,8 +990,7 @@ footer{
   .snav-btn svg{width:21px;height:21px}
   .film-section-label{left:1.5rem;top:1.5rem;}
   .film-label-text{font-size:20px!important;white-space:normal!important;}
-  .card-name{font-size:15px}
-  .card-num-big{font-size:26px}
+
   .stack-label{width:280px}
   #film-section{align-items:flex-start!important}
   .stack-wrap{padding-top:5.5rem}
@@ -1038,9 +1019,7 @@ footer{
   .f-bottom{padding:1rem 1.5rem}
   #film-section{min-height:500px!important;align-items:flex-start!important}
   .ring-stage{height:300px!important}
-  .card-name{font-size:13px}
-  .card-num-big{font-size:22px}
-  .card-bar{padding:.65rem .85rem .6rem}
+
   .stack-label{width:240px}
   .stack-wrap{padding-top:7rem}
 }
@@ -1081,10 +1060,7 @@ footer{
   .film-label-text{font-size:16px!important;white-space:normal!important;}
   .stack-wrap{padding-top:6rem}
   .list-title em{font-size:16px}
-  .card-name{font-size:9px}
-  .card-name em{font-size:7px}
-  .card-num-big{font-size:18px}
-  .card-bar{padding:.45rem .65rem .4rem}
+
   .stack-label{width:200px;letter-spacing:.08em;font-size:9px}
 }
 </style>
@@ -1531,16 +1507,6 @@ const stackCards = (function(){
       face.appendChild(ph);
     }
 
-    const bar = document.createElement('div');
-    bar.className = 'card-bar';
-    bar.innerHTML = `
-      <div class="card-name">
-        <em>${g.topic}</em>
-        ${g.name}
-      </div>
-      <div class="card-num-big">${String(gi+1).padStart(2,'0')}</div>
-    `;
-    face.appendChild(bar);
     card.appendChild(face);
     c.appendChild(card);
     return card;
