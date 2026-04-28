@@ -849,7 +849,7 @@ body.hero-replay .hero-bg::before{
   padding-top:3px;
 }
 .group-row:hover .rn{color:var(--orange)}
-.ri-name{font-family:var(--serif);font-size:20px;font-weight:400;letter-spacing:.01em;margin-bottom:3px}
+.ri-name{font-family:var(--serif);font-size:12px;font-weight:400;letter-spacing:.01em;margin-bottom:3px;line-height:1.6}
 .ri-en{font-family:var(--mono);font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:var(--ink4)}
 
 /* poster cell */
@@ -879,9 +879,9 @@ body.hero-replay .hero-bg::before{
 #groupGrid{display:grid;grid-template-columns:1fr 1fr;gap:0 3rem;align-items:start}
 #groupColRight{border-left:1px solid var(--rule);padding-left:3rem}
 #groupColLeft .exhibit-col-heads,
-#groupColRight .exhibit-col-heads{grid-template-columns:160px 1fr 1fr;min-width:0}
+#groupColRight .exhibit-col-heads{grid-template-columns:220px 1fr 1fr;min-width:0}
 #groupColLeft .group-row,
-#groupColRight .group-row{grid-template-columns:160px minmax(100px,1fr) minmax(100px,1fr);min-width:0}
+#groupColRight .group-row{grid-template-columns:220px minmax(100px,1fr) minmax(100px,1fr);min-width:0}
 
 /* ── FOOTER ── */
 footer{
@@ -1616,7 +1616,7 @@ groups.forEach((g, i) => {
       <div class="rn">${String(i+1).padStart(2,'0')}</div>
       <div class="row-poster-mini"><img src="${g.img}" alt="${g.name}"></div>
       <div class="ri">
-        <div class="ri-name">${g.name} <span class="row-arrow">→</span></div>
+        <div class="ri-name">${splitName(g.name)} <span class="row-arrow">→</span></div>
       </div>
     </div>
 
