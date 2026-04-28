@@ -1627,8 +1627,11 @@ groups.forEach((g, i) => {
   row.className = 'group-row';
 
   const _ns = g.name.split('、').slice(0, 6);
+  const _isTwoPerson = !g.name.includes('、') && !g.name.includes(',');
   const _nameItems = _ns.map((n, j) => {
-    const dn = (i === 7 || i === 8) ? n.replace(' and ', '<br>and ') : n;
+    const dn = _isTwoPerson          ? '<br>' + n
+             : (i === 7 || i === 8) ? n.replace(' and ', '<br>and ')
+             : n;
     return j === _ns.length - 1
       ? `<span>${dn} <span class="row-arrow">→</span></span>`
       : `<span>${dn}</span>`;
