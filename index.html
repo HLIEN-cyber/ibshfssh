@@ -587,15 +587,13 @@ body.hero-replay .hero-bg::before{
 .stack-card{
   position:absolute;width:100%;height:100%;
   clip-path:inset(0 round 14px);cursor:pointer;
-  transition:transform .7s cubic-bezier(.22,1,.36,1),
-             opacity .6s ease,filter .6s ease;
-  will-change:transform,filter;transform-origin:center center;
-  filter:saturate(.35) brightness(1.08);
+  transition:transform .5s cubic-bezier(.22,1,.36,1),
+             opacity .4s ease;
+  will-change:transform,opacity;transform-origin:center center;
 }
 .stack-card[data-pos="0"]{
   transform:translate3d(0,0,0) rotate(0deg) scale(1);z-index:10;
   box-shadow:0 24px 56px rgba(17,17,16,0.28),0 2px 8px rgba(17,17,16,0.12);
-  filter:saturate(1) brightness(1);
 }
 .stack-card[data-pos="1"]{
   transform:translate3d(-300px,6px,0) rotate(-8deg) scale(.82);z-index:8;
@@ -1521,7 +1519,8 @@ const stackCards = (function(){
 /* Update data-pos on existing cards — no DOM rebuild */
 function updateStack(){
   order.forEach((gi, pos) => {
-    stackCards[gi].dataset.pos = pos < 5 ? String(pos) : 'hidden';
+    const next = pos < 5 ? String(pos) : 'hidden';
+    if(stackCards[gi].dataset.pos !== next) stackCards[gi].dataset.pos = next;
   });
   document.getElementById('stackCur').textContent   = String(order[0]+1).padStart(2,'0');
   document.getElementById('stackGroup').textContent = groups[order[0]].name;
@@ -1539,7 +1538,7 @@ function updateStack(){
     if(dir > 0){ const f = order.shift(); order.push(f); }
     else        { const b = order.pop();  order.unshift(b); }
     updateStack();
-    setTimeout(() => { busy = false; }, 700);
+    setTimeout(() => { busy = false; }, 500);
   }
 
   c.addEventListener('click', e => {
