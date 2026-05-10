@@ -283,7 +283,7 @@ nav{
 /* stage background image */
 .hero-bg{
   position:absolute;inset:0;
-  background:url('stage-bg.png') center center / cover no-repeat;
+  background:url('images/stage-bg.png') center center / cover no-repeat;
   z-index:0;
   transform:scale(1.08);
   animation:heroBgZoom 11s cubic-bezier(.2,.7,.2,1) forwards;
@@ -669,7 +669,7 @@ body.hero-replay .hero-bg::before{
 @keyframes mq-ltr{from{transform:translateX(-50%)}to{transform:translateX(0)}}
 
 /* ── ABOUT ── */
-.about{display:grid;grid-template-columns:1fr;border-top:1px solid var(--rule);position:relative;z-index:1;background:url('stage2-bg.png') center center/cover no-repeat;}
+.about{display:grid;grid-template-columns:1fr;border-top:1px solid var(--rule);position:relative;z-index:1;background:url('images/stage2-bg.png') center center/cover no-repeat;}
 .about::before{content:'';position:absolute;inset:0;background:linear-gradient(115deg,rgba(16,24,17,0.82) 0%,rgba(22,32,21,0.68) 42%,rgba(41,53,39,0.38) 72%,rgba(223,228,216,0.06) 100%);z-index:0;}
 .about .about-text{position:relative;z-index:1;}
 .about .about-cta{color:#fff;background:linear-gradient(90deg,var(--orange) 0%,var(--orange) 50%,#fff 50%,#fff 100%);background-size:200% 100%;background-position:100% 0;}
@@ -1297,7 +1297,7 @@ footer{
    填入後佔位版面自動消失，直接顯示海報圖
    bg 為尚未提供圖片時的卡片底色
 ──────────────────────────────────────────────────────────────── */
-const posterImages = ['01.png', ...Array.from({length: 11}, (_, i) => `${String(i + 2).padStart(2, '0')}.webp`)];
+const posterImages = ['images/01.png', ...Array.from({length: 11}, (_, i) => `images/${String(i + 2).padStart(2, '0')}.webp`)];
 
 const groups = [
   {name:"鄭楷平、林睿謙、洪翊銘、許震耀、黃志翔、劉泳廷",    en:'Group A',  topic:'Probability and Expected Value in Lottery Games', app:'彩券遊戲中的機率與期望值', topicUrl:'https://canva.link/tqpme0zose5lks9', appUrl:'https://gemini.google.com/share/28a1214f60f6', url:'', img:'', bg:'#1C1814'},
